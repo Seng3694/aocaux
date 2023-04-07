@@ -22,6 +22,27 @@ bool AocReadFileLineByLine(const char *path, aoc_line_func func,
   return true;
 }
 
+bool AocReadFileLineByLineEx(const char *path, aoc_line_ex_func func,
+                             void *userData) {
+  FILE *file = fopen(path, "r");
+  if (!file) {
+    AOC_LOG("Could not open file '%s'.\n", path);
+    return false;
+  }
+
+  char buffer[1024];
+  size_t lineNumber = 0;
+  while (fgets(buffer, 1024, file) != NULL) {
+    size_t length = strlen(buffer);
+    func(buffer, length, userData, lineNumber);
+    lineNumber++;
+  }
+
+  fclose(file);
+
+  return true;
+}
+
 bool AocReadFileToString(const char *path, char **output, size_t *length) {
   FILE *file = fopen(path, "r");
   if (!file) {
