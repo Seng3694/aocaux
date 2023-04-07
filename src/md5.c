@@ -146,7 +146,7 @@ static void md5_finalize(md5_context *ctx) {
   }
 }
 
-void AuxMD5(const char *text, const size_t length, uint8_t *const result) {
+void AocMD5(const char *text, const size_t length, uint8_t *const result) {
   md5_context ctx = {
       .size = 0,
       .buffer = {A, B, C, D},
