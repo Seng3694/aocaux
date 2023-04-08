@@ -31,9 +31,16 @@ OBJS:=$(BIN)/bits.o \
   $(BIN)/md5.o \
   $(BIN)/string.o
 
+aocaux: $(BIN)/libaocaux.a
+
+test: $(BIN)/test 
+
 $(BIN)/libaocaux.a: $(BIN) $(OBJS)
 	$(SILENT) $(AR) $@ $(OBJS)
 	$(SILENT) $(RANLIB) $@
+
+$(BIN)/test: aocaux test/main.c
+	$(SILENT) $(CC) $(CFLAGS) -o $@ test/main.c -Isrc -L$(BIN) -laocaux
 
 $(BIN)/%.o: $(SRC)/%.c $(INCLUDE)/common.h $(INCLUDE)/%.h
 	$(SILENT) $(CC) -c $(CFLAGS) $< -o $@
@@ -44,4 +51,4 @@ $(BIN):
 clean:
 	$(SILENT) $(RM) $(BIN)/*
 
-.PHONY: clean
+.PHONY: clean aocaux test
