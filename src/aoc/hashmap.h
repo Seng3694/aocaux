@@ -99,20 +99,20 @@ HM_LINKAGE void HM_ADJUST_CAP(HM_NAME *hm, const AOC_SIZE_T capacity);
 
 HM_LINKAGE void HM_INSERT_INTERNAL(AOC_KEY_T *keys, AOC_VALUE_T *values,
                                    const AOC_SIZE_T capacity,
-                                   const AOC_KEY_T key, const AOC_VALUE_T value,
+                                   const AOC_KEY_T key, AOC_VALUE_T value,
                                    const uint32_t *hash);
 
 HM_LINKAGE void HM_INSERT(HM_NAME *const hm, const AOC_KEY_T key,
-                          const AOC_VALUE_T value);
+                          AOC_VALUE_T value);
 
 HM_LINKAGE void HM_INSERT_PH(HM_NAME *const hm, const AOC_KEY_T key,
-                             const AOC_VALUE_T value, const uint32_t hash);
+                             AOC_VALUE_T value, const uint32_t hash);
 
 HM_LINKAGE bool HM_GET(const HM_NAME *const hm, const AOC_KEY_T key,
-                       AOC_VALUE_T *const out);
+                       AOC_VALUE_T *out);
 
 HM_LINKAGE bool HM_GET_PH(const HM_NAME *const hm, const AOC_KEY_T key,
-                          const uint32_t hash, AOC_VALUE_T *const out);
+                          const uint32_t hash, AOC_VALUE_T *out);
 
 HM_LINKAGE void HM_REMOVE(HM_NAME *const hm, const AOC_KEY_T key);
 HM_LINKAGE void HM_REMOVE_PH(HM_NAME *const hm, const AOC_KEY_T key,
@@ -166,7 +166,7 @@ HM_LINKAGE void HM_ADJUST_CAP(HM_NAME *hm, const AOC_SIZE_T capacity) {
 
 HM_LINKAGE void HM_INSERT_INTERNAL(AOC_KEY_T *keys, AOC_VALUE_T *values,
                                    const AOC_SIZE_T capacity,
-                                   const AOC_KEY_T key, const AOC_VALUE_T value,
+                                   const AOC_KEY_T key, AOC_VALUE_T value,
                                    const uint32_t *hash) {
   const uint32_t keyHash = hash ? *hash : AOC_KEY_T_HFUNC(&key);
   uint32_t index = HM_MOD(keyHash, capacity);
@@ -182,7 +182,7 @@ HM_LINKAGE void HM_INSERT_INTERNAL(AOC_KEY_T *keys, AOC_VALUE_T *values,
 }
 
 HM_LINKAGE void HM_INSERT(HM_NAME *const hm, const AOC_KEY_T key,
-                          const AOC_VALUE_T value) {
+                          AOC_VALUE_T value) {
   if (hm->count + 1 > hm->capacity * HM_MAX_LOAD) {
     const AOC_SIZE_T capacity = hm->capacity * 2;
     HM_ADJUST_CAP(hm, capacity);
@@ -192,7 +192,7 @@ HM_LINKAGE void HM_INSERT(HM_NAME *const hm, const AOC_KEY_T key,
 }
 
 HM_LINKAGE void HM_INSERT_PH(HM_NAME *const hm, const AOC_KEY_T key,
-                             const AOC_VALUE_T value, const uint32_t hash) {
+                             AOC_VALUE_T value, const uint32_t hash) {
   if (hm->count + 1 > hm->capacity * HM_MAX_LOAD) {
     const AOC_SIZE_T capacity = hm->capacity * 2;
     HM_ADJUST_CAP(hm, capacity);
@@ -202,13 +202,13 @@ HM_LINKAGE void HM_INSERT_PH(HM_NAME *const hm, const AOC_KEY_T key,
 }
 
 HM_LINKAGE bool HM_GET(const HM_NAME *const hm, const AOC_KEY_T key,
-                       AOC_VALUE_T *const out) {
+                       AOC_VALUE_T *out) {
   const uint32_t keyHash = AOC_KEY_T_HFUNC(&key);
   return HM_GET_PH(hm, key, keyHash, out);
 }
 
 HM_LINKAGE bool HM_GET_PH(const HM_NAME *const hm, const AOC_KEY_T key,
-                          const uint32_t hash, AOC_VALUE_T *const out) {
+                          const uint32_t hash, AOC_VALUE_T *out) {
   uint32_t index = HM_MOD(hash, hm->capacity);
   for (;;) {
     AOC_KEY_T *entry = &hm->keys[index];
@@ -255,6 +255,8 @@ HM_LINKAGE bool HM_CONTAINS(const HM_NAME *const hm, const AOC_KEY_T key,
   const uint32_t keyHash = AOC_KEY_T_HFUNC(&key);
   if (hash)
     *hash = keyHash;
+  if (hm->count == 0)
+    return false;
   uint32_t index = HM_MOD(keyHash, hm->capacity);
   for (;;) {
     AOC_KEY_T *entry = &hm->keys[index];
