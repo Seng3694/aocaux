@@ -155,3 +155,12 @@ void AocMD5(const char *text, const size_t length, uint8_t *const result) {
   md5_finalize(&ctx);
   memcpy(result, ctx.digest, 16);
 }
+
+static const char hexMapping[] = "0123456789abcdef";
+
+void AocMD5ResultToString(const uint8_t *const result, char *const buffer) {
+  for (uint8_t i = 0, j = 0; i < 16; i++, j += 2) {
+    buffer[j] = hexMapping[(result[i] & 0xf0) >> 4];
+    buffer[j + 1] = hexMapping[result[i] & 0x0f];
+  }
+}
