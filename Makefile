@@ -26,6 +26,8 @@ BIN:=bin
 SRC:=src
 INCLUDE:=$(SRC)/aoc
 
+TESTS:=$(wildcard test/*_test.c)
+
 OBJS:=$(BIN)/bits.o \
   $(BIN)/filesystem.o \
   $(BIN)/md5.o \
@@ -35,10 +37,8 @@ $(BIN)/libaocaux.a: | $(BIN) $(OBJS)
 	$(SILENT) $(AR) $@ $(OBJS)
 	$(SILENT) $(RANLIB) $@
 
-test: $(BIN)/test 
-
-$(BIN)/test: $(BIN)/libaocaux.a test/main.c
-	$(SILENT) $(CC) $(CFLAGS) -o $@ test/main.c -Isrc -L$(BIN) -laocaux
+$(BIN)/%_test: $(BIN)/libaocaux.a $(TESTS) 
+	$(SILENT) $(CC) $(CFLAGS) -o $@ $(subst $(BIN)/,test/,$@).c -Isrc -L$(BIN) $<
 
 $(BIN)/%.o: $(SRC)/%.c $(INCLUDE)/common.h $(INCLUDE)/%.h
 	$(SILENT) $(CC) -c $(CFLAGS) $< -o $@
