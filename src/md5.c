@@ -1,6 +1,6 @@
 #include "aoc/md5.h"
 #include "aoc/common.h"
-#include <string.h>
+#include "aoc/mem.h"
 #include <limits.h>
 
 typedef struct {
@@ -153,7 +153,7 @@ void AocMD5(const char *text, const size_t length, uint8_t *const result) {
   };
   md5_update(&ctx, (uint8_t *)text, length);
   md5_finalize(&ctx);
-  memcpy(result, ctx.digest, 16);
+  AocMemCopy(result, ctx.digest, 16);
 }
 
 static const char hexMapping[] = "0123456789abcdef";

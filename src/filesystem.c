@@ -1,3 +1,4 @@
+#include "aoc/common.h"
 #include "aoc/filesystem.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -52,7 +53,7 @@ bool AocReadFileToString(const char *path, char **output, size_t *length) {
   fseek(file, 0, SEEK_END);
   const size_t size = ftell(file);
   rewind(file);
-  char *content = malloc(size + 1);
+  char *content = AOC_MALLOC(size + 1);
   if (!content) {
     AOC_LOG("Failed to allocate %zu bytes\n", size + 1);
     fclose(file);

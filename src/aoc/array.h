@@ -1,37 +1,13 @@
-#include <stdlib.h>
-#include <string.h>
+#include "mem.h"
 
 #ifndef AOC_T
 #error "AOC_T must be defined"
+#define AOC_T int
 #endif
 
 #ifndef AOC_T_NAME
 #error "AOC_T_NAME must be defined"
-#endif
-
-#ifndef AOC_SIZE_T
-#include <stddef.h>
-#define AOC_SIZE_T size_t
-#endif
-
-#ifndef AOC_MALLOC
-#include <stdlib.h>
-#define AOC_MALLOC malloc
-#endif
-
-#ifndef AOC_REALLOC
-#include <stdlib.h>
-#define AOC_REALLOC realloc
-#endif
-
-#ifndef AOC_FREE
-#include <stdlib.h>
-#define AOC_FREE free
-#endif
-
-#ifndef AOC_MEMCPY
-#include <string.h>
-#define AOC_MEMCPY memcpy
+#define AOC_T_NAME Int
 #endif
 
 #define COMBINE(a, b) a##b
@@ -91,14 +67,14 @@ ARRAY_LINKAGE void ARRAY_DESTROY(ARRAY_NAME *const arr) {
 ARRAY_LINKAGE void ARRAY_COPY(ARRAY_NAME *const dest,
                               const ARRAY_NAME *const src) {
   ARRAY_ENSURE_CAPACITY(dest, src->capacity);
-  AOC_MEMCPY(dest->items, src->items, sizeof(AOC_T) * src->length);
+  AocMemCopy(dest->items, src->items, src->length * sizeof(AOC_T));
   dest->length = src->length;
 }
 
 ARRAY_LINKAGE void ARRAY_DUPE(ARRAY_NAME *const dest,
                               const ARRAY_NAME *const src) {
   ARRAY_CREATE(dest, src->capacity);
-  AOC_MEMCPY(dest->items, src->items, sizeof(AOC_T) * src->length);
+  AocMemCopy(dest->items, src->items, src->length * sizeof(AOC_T));
   dest->length = src->length;
 }
 
@@ -143,10 +119,6 @@ ARRAY_LINKAGE void ARRAY_CLEAR(ARRAY_NAME *const arr) {
 #undef AOC_T
 #undef AOC_T_NAME
 #undef AOC_SIZE_T
-#undef AOC_MALLOC
-#undef AOC_REALLOC
-#undef AOC_FREE
-#undef AOC_MEMCPY
 #undef ARRAY_NAME
 #undef ARRAY_IMPL
 #undef ARRAY_LINKAGE

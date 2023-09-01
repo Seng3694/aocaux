@@ -49,21 +49,6 @@
 #define HM_MOD(a, b) ((a) % (b))
 #endif
 
-#ifndef AOC_SIZE_T
-#include <stddef.h>
-#define AOC_SIZE_T size_t
-#endif
-
-#ifndef AOC_MALLOC
-#include <stdlib.h>
-#define AOC_MALLOC malloc
-#endif
-
-#ifndef AOC_FREE
-#include <stdlib.h>
-#define AOC_FREE free
-#endif
-
 #define COMBINE(a, b) a##b
 #define COMBINE2(a, b) COMBINE(a, b)
 
@@ -278,9 +263,6 @@ HM_LINKAGE bool HM_CONTAINS(const HM_NAME *const hm, const AOC_KEY_T key,
 #undef AOC_KEY_T_EQUALS
 
 #undef AOC_BASE2_CAPACITY
-#undef AOC_SIZE_T
-#undef AOC_MALLOC
-#undef AOC_FREE
 
 #undef COMBINE
 #undef COMBINE2

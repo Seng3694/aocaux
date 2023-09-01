@@ -28,10 +28,12 @@ INCLUDE:=$(SRC)/aoc
 
 TESTS:=$(wildcard test/*_test.c)
 
-OBJS:=$(BIN)/bits.o \
+OBJS:=$(BIN)/arena.o \
+  $(BIN)/bits.o \
   $(BIN)/filesystem.o \
   $(BIN)/md5.o \
-  $(BIN)/string.o
+  $(BIN)/string.o \
+  $(BIN)/mem.o \
 
 $(BIN)/libaocaux.a: | $(BIN) $(OBJS) 
 	$(SILENT) $(AR) $@ $(OBJS)

@@ -19,26 +19,6 @@
 #error "AOC_T_COMPARE must be defined"
 #endif
 
-#ifndef AOC_SIZE_T
-#include <stddef.h>
-#define AOC_SIZE_T size_t
-#endif
-
-#ifndef AOC_MALLOC
-#include <stdlib.h>
-#define AOC_MALLOC malloc
-#endif
-
-#ifndef AOC_REALLOC
-#include <stdlib.h>
-#define AOC_REALLOC realloc
-#endif
-
-#ifndef AOC_FREE
-#include <stdlib.h>
-#define AOC_FREE free
-#endif
-
 #ifdef AOC_MAX_HEAP
 #define HP_TYPE Max
 #else
@@ -182,10 +162,6 @@ HP_LINKAGE void HP_HEAPIFY_DOWN(HP_NAME *const h) {
 #undef AOC_T_NAME
 #undef AOC_T_COMPARE
 #undef AOC_MAX_HEAP
-#undef AOC_MALLOC
-#undef AOC_REALLOC
-#undef AOC_FREE
-#undef AOC_SIZE_T
 
 #undef HP_TYPE
 #undef HP_NAME

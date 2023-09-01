@@ -1,6 +1,5 @@
-#include <stdlib.h>
-#include <string.h>
-#include <assert.h>
+#include "common.h"
+#include "mem.h"
 
 #ifndef AOC_T
 #error "AOC_T must be defined"
@@ -8,26 +7,6 @@
 
 #ifndef AOC_T_NAME
 #error "AOC_T_NAME must be defined"
-#endif
-
-#ifndef AOC_SIZE_T
-#include <stddef.h>
-#define AOC_SIZE_T size_t
-#endif
-
-#ifndef AOC_MALLOC
-#include <stdlib.h>
-#define AOC_MALLOC malloc
-#endif
-
-#ifndef AOC_FREE
-#include <stdlib.h>
-#define AOC_FREE free
-#endif
-
-#ifndef AOC_MEMCPY
-#include <string.h>
-#define AOC_MEMCPY memcpy
 #endif
 
 #ifdef AOC_BASE2_CAPACITY
@@ -101,7 +80,7 @@ DEQUE_LINKAGE void DEQUE_DESTROY(DEQUE_NAME *const deque) {
 DEQUE_LINKAGE void DEQUE_COPY(DEQUE_NAME *const dest,
                               const DEQUE_NAME *const src) {
   DEQUE_ENSURE_CAPACITY(dest, src->capacity);
-  AOC_MEMCPY(dest->items, src->items, sizeof(AOC_T) * src->length);
+  AocMemCopy(dest->items, src->items, sizeof(AOC_T) * src->length);
   dest->length = src->length;
   dest->head = src->head;
   dest->tail = src->tail;
@@ -110,7 +89,7 @@ DEQUE_LINKAGE void DEQUE_COPY(DEQUE_NAME *const dest,
 DEQUE_LINKAGE void DEQUE_DUPE(DEQUE_NAME *const dest,
                               const DEQUE_NAME *const src) {
   DEQUE_CREATE(dest, src->capacity);
-  AOC_MEMCPY(dest->items, src->items, sizeof(AOC_T) * src->length);
+  AocMemCopy(dest->items, src->items, sizeof(AOC_T) * src->length);
   dest->length = src->length;
   dest->head = src->head;
   dest->tail = src->tail;
@@ -136,7 +115,7 @@ DEQUE_LINKAGE void DEQUE_PUSH_FRONT(DEQUE_NAME *const deque, AOC_T item) {
 }
 
 DEQUE_LINKAGE void DEQUE_POP_BACK(DEQUE_NAME *const deque) {
-  assert(deque->length > 0);
+  AOC_ASSERT(deque->length > 0);
 
   if (deque->tail == 0)
     deque->tail = deque->capacity - 1;
@@ -147,18 +126,18 @@ DEQUE_LINKAGE void DEQUE_POP_BACK(DEQUE_NAME *const deque) {
 }
 
 DEQUE_LINKAGE void DEQUE_POP_FRONT(DEQUE_NAME *const deque) {
-  assert(deque->length > 0);
+  AOC_ASSERT(deque->length > 0);
   deque->head = DEQUE_MOD((deque->head + 1), deque->capacity);
   deque->length--;
 }
 
 DEQUE_LINKAGE AOC_T *DEQUE_PEEK_BACK(DEQUE_NAME *const deque) {
-  assert(deque->length > 0);
+  AOC_ASSERT(deque->length > 0);
   return &deque->items[deque->tail - 1];
 }
 
 DEQUE_LINKAGE AOC_T *DEQUE_PEEK_FRONT(DEQUE_NAME *const deque) {
-  assert(deque->length > 0);
+  AOC_ASSERT(deque->length > 0);
   return &deque->items[deque->head];
 }
 
@@ -177,10 +156,10 @@ DEQUE_LINKAGE void DEQUE_RESIZE(DEQUE_NAME *const deque,
       // new array (size 8): [1] [2] [3] [4] [5] [-] [-] [-]
       AOC_T *newData = (AOC_T *)AOC_MALLOC(capacity * sizeof(AOC_T));
       // copy [1] [2] [3]
-      AOC_MEMCPY(newData, deque->items + deque->head,
+      AocMemCopy(newData, deque->items + deque->head,
                  (deque->capacity - deque->head) * sizeof(AOC_T));
       // copy [4] [5]
-      AOC_MEMCPY(newData + deque->capacity - deque->head, deque->items,
+      AocMemCopy(newData + deque->capacity - deque->head, deque->items,
                  deque->tail * sizeof(AOC_T));
       deque->tail = deque->capacity - deque->head + deque->tail;
       deque->head = 0;
@@ -188,7 +167,7 @@ DEQUE_LINKAGE void DEQUE_RESIZE(DEQUE_NAME *const deque,
       deque->items = newData;
     } else {
       AOC_T *newData = (AOC_T *)AOC_MALLOC(capacity * sizeof(AOC_T));
-      memcpy(newData, deque->items, deque->capacity * sizeof(AOC_T));
+      AocMemCopy(newData, deque->items, deque->capacity * sizeof(AOC_T));
       AOC_FREE(deque->items);
       deque->items = newData;
     }
@@ -206,11 +185,6 @@ DEQUE_LINKAGE void DEQUE_CLEAR(DEQUE_NAME *const deque) {
 #undef COMBINE2
 #undef AOC_T
 #undef AOC_T_NAME
-#undef AOC_SIZE_T
-#undef AOC_MALLOC
-#undef AOC_REALLOC
-#undef AOC_FREE
-#undef AOC_MEMCPY
 #undef DEQUE_NAME
 #undef DEQUE_IMPL
 #undef DEQUE_LINKAGE
