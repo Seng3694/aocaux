@@ -35,8 +35,8 @@ static void *aoc_arena_alloc_internal(aoc_arena *a, const AOC_SIZE_T size) {
   if (a->end == NULL) {
     AOC_ASSERT(a->begin == NULL);
     AOC_SIZE_T capacity = AOC_ARENA_DEFAULT_CAPACITY;
-    if (capacity < size)
-      capacity = size;
+    if (capacity < s)
+      capacity = s;
     a->end = aoc_arena_region_new(capacity);
     a->begin = a->end;
   }
@@ -47,8 +47,8 @@ static void *aoc_arena_alloc_internal(aoc_arena *a, const AOC_SIZE_T size) {
   if (a->end->count + s > a->end->capacity) {
     AOC_ASSERT(a->end->next == NULL);
     AOC_SIZE_T capacity = AOC_ARENA_DEFAULT_CAPACITY;
-    if (capacity < size)
-      capacity = size;
+    if (capacity < s)
+      capacity = s;
     a->end->next = aoc_arena_region_new(capacity);
     a->end = a->end->next;
   }
