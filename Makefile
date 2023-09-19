@@ -30,6 +30,7 @@ TESTS:=$(wildcard test/*_test.c)
 
 OBJS:=$(BIN)/arena.o \
   $(BIN)/bits.o \
+  $(BIN)/common.o \
   $(BIN)/filesystem.o \
   $(BIN)/md5.o \
   $(BIN)/string.o \
