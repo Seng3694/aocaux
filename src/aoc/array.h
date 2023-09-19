@@ -118,7 +118,6 @@ ARRAY_LINKAGE void ARRAY_CLEAR(ARRAY_NAME *const arr) {
 #undef COMBINE2
 #undef AOC_T
 #undef AOC_T_NAME
-#undef AOC_SIZE_T
 #undef ARRAY_NAME
 #undef ARRAY_IMPL
 #undef ARRAY_LINKAGE
