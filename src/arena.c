@@ -17,6 +17,7 @@ static aoc_arena_region *aoc_arena_region_new(const AOC_SIZE_T capacity) {
   const AOC_SIZE_T bytes =
       sizeof(aoc_arena_region) + sizeof(uintptr_t) * capacity;
   aoc_arena_region *r = malloc(bytes);
+  AOC_LOG("aoc_arena new region allocated\n");
   AOC_ASSERT(r);
   r->next = NULL;
   r->count = 0;
@@ -101,12 +102,23 @@ void AocArenaReset(aoc_arena *a) {
 }
 
 void AocArenaFree(aoc_arena *a) {
+#ifndef NDEBUG
+  AOC_SIZE_T used = 0;
+  AOC_SIZE_T total = 0;
+#endif
   aoc_arena_region *r = a->begin;
   while (r) {
     aoc_arena_region *tmp = r;
     r = r->next;
+#ifndef NDEBUG
+    used += tmp->count;
+    total += tmp->capacity;
+#endif
     aoc_arena_region_free(tmp);
   }
   a->begin = NULL;
   a->end = NULL;
+
+  AOC_LOG("aoc_arena memory freed:\n allocated %zu\n used %zu (%.2f)\n", total,
+          used, (used / (float)total) * 100);
 }
