@@ -8,7 +8,7 @@
 
 #include <stdio.h>
 #include <stdarg.h>
-#define AOC_LOG(...) printf(__VA_ARGS__)
+#define AOC_LOG(...) fprintf(stderr, __VA_ARGS__)
 
 #include <assert.h>
 #define AOC_ASSERT(expr) assert(expr)
