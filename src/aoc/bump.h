@@ -13,7 +13,10 @@ typedef struct {
   uintptr_t *memory;
 } aoc_bump;
 
-void *AocBumpAlloc(aoc_bump *const bump, const AOC_SIZE_T size);
+void *AocBumpAlloc(aoc_bump *const bump, AOC_SIZE_T size);
+void *AocBumpCalloc(aoc_bump *const bump, AOC_SIZE_T count, AOC_SIZE_T size);
+void *AocBumpRealloc(aoc_bump *const bump, void *old, AOC_SIZE_T size);
+
 void AocBumpInit(aoc_bump *const bump, const AOC_SIZE_T size);
 void AocBumpDestroy(aoc_bump *const bump);
 void AocBumpReset(aoc_bump *const bump);

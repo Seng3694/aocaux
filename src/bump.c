@@ -6,9 +6,11 @@
 
 void *AocBumpAlloc(aoc_bump *const bump, AOC_SIZE_T size) {
   size = ALIGN_TO_PTR_SIZE(size);
-  size /= sizeof(uintptr_t);
+  size = (size / sizeof(uintptr_t)) + 1; // +1 for the block size
   AOC_ASSERT(bump->length + size <= bump->capacity);
-  void *result = &bump->memory[bump->length];
+  // save block size. required for realloc
+  bump->memory[bump->length] = (uintptr_t)size;
+  uintptr_t *result = &bump->memory[bump->length + 1];
   bump->length += size;
 #ifndef NDEBUG
   if (bump->length > bump->max)
@@ -23,6 +25,15 @@ void *AocBumpCalloc(aoc_bump *const bump, AOC_SIZE_T count, AOC_SIZE_T size) {
   for (size_t i = 0; i < size; ++i)
     data[i] = 0;
   return data;
+}
+
+void *AocBumpRealloc(aoc_bump *const bump, void *old, AOC_SIZE_T size) {
+  const AOC_SIZE_T oldSize = (AOC_SIZE_T)(*((uintptr_t *)old) - 1);
+  if (oldSize >= size)
+    return old;
+  void *new = AocBumpAlloc(bump, size);
+  AocMemCopy(new, old, oldSize);
+  return new;
 }
 
 void AocBumpInit(aoc_bump *const bump, AOC_SIZE_T size) {
@@ -59,12 +70,21 @@ static inline void *aoc_bump_calloc(void *bump, AOC_SIZE_T count,
   return AocBumpCalloc(bump, count, size);
 }
 
+static inline void *aoc_bump_realloc(void *bump, void *old, AOC_SIZE_T size) {
+  return AocBumpRealloc(bump, old, size);
+}
+
+static inline void aoc_bump_free(void *bump, void *ptr) {
+  (void)bump;
+  (void)ptr;
+}
+
 aoc_allocator AocBumpCreateAllocator(aoc_bump *bump) {
   return (aoc_allocator){
       .alloc = aoc_bump_alloc,
       .calloc = aoc_bump_calloc,
-      .realloc = NULL,
-      .free = NULL,
+      .realloc = aoc_bump_realloc,
+      .free = aoc_bump_free,
       .allocator = bump,
   };
 }
