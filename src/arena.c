@@ -122,3 +122,32 @@ void AocArenaFree(aoc_arena *a) {
   AOC_LOG("aoc_arena memory freed:\n allocated %zu\n used %zu (%.2f)\n", total,
           used, (used / (float)total) * 100);
 }
+
+static inline void *aoc_arena_alloc(void *allocator, AOC_SIZE_T size) {
+  return AocArenaAlloc(allocator, size);
+}
+
+static inline void *aoc_arena_realloc(void *allocator, void *old,
+                                      AOC_SIZE_T size) {
+  return AocArenaRealloc(allocator, old, size);
+}
+
+static inline void *aoc_arena_calloc(void *allocator, AOC_SIZE_T count,
+                                     AOC_SIZE_T size) {
+  return AocArenaCalloc(allocator, count, size);
+}
+
+static inline void aoc_arena_free(void *allocator, void *ptr) {
+  (void)allocator;
+  (void)ptr;
+}
+
+aoc_allocator AocArenaCreateAllocator(aoc_arena *a) {
+  return (aoc_allocator){
+      .alloc = aoc_arena_alloc,
+      .calloc = aoc_arena_calloc,
+      .realloc = aoc_arena_realloc,
+      .free = aoc_arena_free,
+      .allocator = a,
+  };
+}

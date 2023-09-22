@@ -1,4 +1,5 @@
 #include "common.h"
+#include "mem.h"
 
 // these macros have to be defined
 // #define AOC_T
@@ -68,11 +69,11 @@ HP_LINKAGE void HP_HEAPIFY_DOWN(HP_NAME *const h);
 HP_LINKAGE void HP_CREATE(HP_NAME *const h, const AOC_SIZE_T capacity) {
   h->capacity = capacity;
   h->count = 0;
-  h->items = (AOC_T *)AOC_MALLOC(sizeof(AOC_T) * capacity);
+  h->items = (AOC_T *)AocAlloc(sizeof(AOC_T) * capacity);
 }
 
 HP_LINKAGE void HP_DESTROY(HP_NAME *const h) {
-  AOC_FREE(h->items);
+  AocFree(h->items);
 }
 
 HP_LINKAGE void HP_PUSH(HP_NAME *const h, AOC_T item) {
@@ -102,7 +103,7 @@ HP_LINKAGE void HP_SWAP(AOC_T *const a, AOC_T *const b) {
 HP_LINKAGE void HP_ENSURE_CAPACITY(HP_NAME *const h, AOC_SIZE_T capacity) {
   if (h->capacity < capacity) {
     h->capacity = capacity * 2;
-    h->items = (AOC_T *)AOC_REALLOC(h->items, sizeof(AOC_T) * h->capacity);
+    h->items = (AOC_T *)AocRealloc(h->items, sizeof(AOC_T) * h->capacity);
   }
 }
 

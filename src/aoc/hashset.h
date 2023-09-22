@@ -1,4 +1,5 @@
 #include "common.h"
+#include "mem.h"
 
 // these macros have to be defined
 // #define AOC_T
@@ -6,6 +7,9 @@
 // #define AOC_T_EMPTY
 // #define AOC_T_HFUNC(x)
 // #define AOC_T_EQUALS(a, b)
+
+// this macros are optional
+// #define AOC_BASE2_CAPACITY
 
 #ifndef AOC_T
 #error "AOC_T must be defined"
@@ -81,18 +85,18 @@ HS_LINKAGE bool HS_CONTAINS(const HS_NAME *const hs, const AOC_T key,
 HS_LINKAGE void HS_CREATE(HS_NAME *const hs, const AOC_SIZE_T capacity) {
   hs->capacity = capacity;
   hs->count = 0;
-  hs->entries = (AOC_T *)AOC_MALLOC(sizeof(AOC_T) * hs->capacity);
+  hs->entries = (AOC_T *)AocAlloc(sizeof(AOC_T) * hs->capacity);
   for (AOC_SIZE_T i = 0; i < capacity; ++i) {
     hs->entries[i] = AOC_T_EMPTY;
   }
 }
 
 HS_LINKAGE void HS_DESTROY(HS_NAME *hs) {
-  AOC_FREE(hs->entries);
+  AocFree(hs->entries);
 }
 
 HS_LINKAGE void HS_ADJUST_CAP(HS_NAME *hs, const AOC_SIZE_T capacity) {
-  AOC_T *entries = (AOC_T *)AOC_MALLOC(sizeof(AOC_T) * capacity);
+  AOC_T *entries = (AOC_T *)AocAlloc(sizeof(AOC_T) * capacity);
   for (AOC_SIZE_T i = 0; i < capacity; ++i) {
     entries[i] = AOC_T_EMPTY;
   }
@@ -106,7 +110,7 @@ HS_LINKAGE void HS_ADJUST_CAP(HS_NAME *hs, const AOC_SIZE_T capacity) {
     hs->count++;
   }
 
-  AOC_FREE(hs->entries);
+  AocFree(hs->entries);
   hs->entries = entries;
   hs->capacity = capacity;
 }

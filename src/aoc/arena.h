@@ -2,6 +2,7 @@
 #define AOCAUX_ARENA_H
 
 #include "common.h"
+#include "mem.h"
 
 // has to be base 2
 #ifndef AOC_ARENA_DEFAULT_CAPACITY
@@ -21,5 +22,7 @@ void *AocArenaCalloc(aoc_arena *a, const AOC_SIZE_T count,
                      const AOC_SIZE_T size);
 void AocArenaReset(aoc_arena *a);
 void AocArenaFree(aoc_arena *a);
+
+aoc_allocator AocArenaCreateAllocator(aoc_arena *a);
 
 #endif

@@ -30,11 +30,11 @@ TESTS:=$(wildcard test/*_test.c)
 
 OBJS:=$(BIN)/arena.o \
   $(BIN)/bits.o \
-  $(BIN)/common.o \
   $(BIN)/filesystem.o \
   $(BIN)/md5.o \
   $(BIN)/string.o \
   $(BIN)/mem.o \
+  $(BIN)/bump.o 
 
 $(BIN)/libaocaux.a: | $(BIN) $(OBJS) 
 	$(SILENT) $(AR) $@ $(OBJS)

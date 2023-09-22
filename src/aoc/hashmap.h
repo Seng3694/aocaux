@@ -1,4 +1,5 @@
 #include "common.h"
+#include "mem.h"
 
 // these macros have to be defined
 // #define AOC_KEY_T
@@ -9,11 +10,8 @@
 // #define AOC_KEY_T_HFUNC
 // #define AOC_KEY_T_EQUALS
 
-// these macros are optional
+// this macros are optional
 // #define AOC_BASE2_CAPACITY
-// #define AOC_SIZE_T
-// #define AOC_MALLOC
-// #define AOC_FREE
 
 #ifndef AOC_KEY_T
 #error "AOC_KEY_T must be defined"
@@ -111,22 +109,21 @@ HM_LINKAGE bool HM_CONTAINS(const HM_NAME *const hm, const AOC_KEY_T key,
 HM_LINKAGE void HM_CREATE(HM_NAME *const hm, const AOC_SIZE_T capacity) {
   hm->capacity = capacity;
   hm->count = 0;
-  hm->keys = (AOC_KEY_T *)AOC_MALLOC(sizeof(AOC_KEY_T) * hm->capacity);
-  hm->values = (AOC_VALUE_T *)AOC_MALLOC(sizeof(AOC_VALUE_T) * hm->capacity);
+  hm->keys = (AOC_KEY_T *)AocAlloc(sizeof(AOC_KEY_T) * hm->capacity);
+  hm->values = (AOC_VALUE_T *)AocAlloc(sizeof(AOC_VALUE_T) * hm->capacity);
   for (AOC_SIZE_T i = 0; i < capacity; ++i) {
     hm->keys[i] = AOC_KEY_T_EMPTY;
   }
 }
 
 HM_LINKAGE void HM_DESTROY(HM_NAME *hm) {
-  AOC_FREE(hm->keys);
-  AOC_FREE(hm->values);
+  AocFree(hm->keys);
+  AocFree(hm->values);
 }
 
 HM_LINKAGE void HM_ADJUST_CAP(HM_NAME *hm, const AOC_SIZE_T capacity) {
-  AOC_KEY_T *keys = (AOC_KEY_T *)AOC_MALLOC(sizeof(AOC_KEY_T) * capacity);
-  AOC_VALUE_T *values =
-      (AOC_VALUE_T *)AOC_MALLOC(sizeof(AOC_VALUE_T) * capacity);
+  AOC_KEY_T *keys = (AOC_KEY_T *)AocAlloc(sizeof(AOC_KEY_T) * capacity);
+  AOC_VALUE_T *values = (AOC_VALUE_T *)AocAlloc(sizeof(AOC_VALUE_T) * capacity);
 
   for (AOC_SIZE_T i = 0; i < capacity; ++i) {
     keys[i] = AOC_KEY_T_EMPTY;
@@ -142,8 +139,8 @@ HM_LINKAGE void HM_ADJUST_CAP(HM_NAME *hm, const AOC_SIZE_T capacity) {
     hm->count++;
   }
 
-  AOC_FREE(hm->keys);
-  AOC_FREE(hm->values);
+  AocFree(hm->keys);
+  AocFree(hm->values);
   hm->keys = keys;
   hm->values = values;
   hm->capacity = capacity;

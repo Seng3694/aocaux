@@ -69,11 +69,11 @@ DEQUE_LINKAGE void DEQUE_CREATE(DEQUE_NAME *const deque,
   deque->length = 0;
   deque->head = 0;
   deque->tail = 0;
-  deque->items = (AOC_T *)AOC_MALLOC(sizeof(AOC_T) * capacity);
+  deque->items = (AOC_T *)AocAlloc(sizeof(AOC_T) * capacity);
 }
 
 DEQUE_LINKAGE void DEQUE_DESTROY(DEQUE_NAME *const deque) {
-  AOC_FREE(deque->items);
+  AocFree(deque->items);
   deque->items = NULL;
 }
 
@@ -154,7 +154,7 @@ DEQUE_LINKAGE void DEQUE_RESIZE(DEQUE_NAME *const deque,
       // example:
       // old array (size 5): [4] [5] [1] [2] [3]   (head 1   tail 5)
       // new array (size 8): [1] [2] [3] [4] [5] [-] [-] [-]
-      AOC_T *newData = (AOC_T *)AOC_MALLOC(capacity * sizeof(AOC_T));
+      AOC_T *newData = (AOC_T *)AocAlloc(capacity * sizeof(AOC_T));
       // copy [1] [2] [3]
       AocMemCopy(newData, deque->items + deque->head,
                  (deque->capacity - deque->head) * sizeof(AOC_T));
@@ -163,12 +163,12 @@ DEQUE_LINKAGE void DEQUE_RESIZE(DEQUE_NAME *const deque,
                  deque->tail * sizeof(AOC_T));
       deque->tail = deque->capacity - deque->head + deque->tail;
       deque->head = 0;
-      AOC_FREE(deque->items);
+      AocFree(deque->items);
       deque->items = newData;
     } else {
-      AOC_T *newData = (AOC_T *)AOC_MALLOC(capacity * sizeof(AOC_T));
+      AOC_T *newData = (AOC_T *)AocAlloc(capacity * sizeof(AOC_T));
       AocMemCopy(newData, deque->items, deque->capacity * sizeof(AOC_T));
-      AOC_FREE(deque->items);
+      AocFree(deque->items);
       deque->items = newData;
     }
   }

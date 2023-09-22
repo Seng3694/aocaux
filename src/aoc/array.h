@@ -56,11 +56,11 @@ ARRAY_LINKAGE void ARRAY_CREATE(ARRAY_NAME *const arr,
                                 const AOC_SIZE_T capacity) {
   arr->capacity = capacity;
   arr->length = 0;
-  arr->items = (AOC_T *)AOC_MALLOC(sizeof(AOC_T) * capacity);
+  arr->items = (AOC_T *)AocAlloc(sizeof(AOC_T) * capacity);
 }
 
 ARRAY_LINKAGE void ARRAY_DESTROY(ARRAY_NAME *const arr) {
-  AOC_FREE(arr->items);
+  AocFree(arr->items);
   arr->items = NULL;
 }
 
@@ -107,7 +107,7 @@ ARRAY_LINKAGE void ARRAY_ENSURE_CAPACITY(ARRAY_NAME *const arr,
 ARRAY_LINKAGE void ARRAY_RESIZE(ARRAY_NAME *const arr,
                                 const AOC_SIZE_T capacity) {
   arr->capacity = capacity;
-  arr->items = (AOC_T *)AOC_REALLOC(arr->items, sizeof(AOC_T) * capacity);
+  arr->items = (AOC_T *)AocRealloc(arr->items, sizeof(AOC_T) * capacity);
 }
 
 ARRAY_LINKAGE void ARRAY_CLEAR(ARRAY_NAME *const arr) {
