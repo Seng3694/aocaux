@@ -34,7 +34,8 @@ OBJS:=$(BIN)/arena.o \
   $(BIN)/md5.o \
   $(BIN)/string.o \
   $(BIN)/mem.o \
-  $(BIN)/bump.o 
+  $(BIN)/bump.o \
+  $(BIN)/image.o
 
 $(BIN)/libaocaux.a: | $(BIN) $(OBJS) 
 	$(SILENT) $(AR) $@ $(OBJS)
