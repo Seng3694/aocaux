@@ -80,7 +80,7 @@ DEQUE_LINKAGE void DEQUE_DESTROY(DEQUE_NAME *const deque) {
 DEQUE_LINKAGE void DEQUE_COPY(DEQUE_NAME *const dest,
                               const DEQUE_NAME *const src) {
   DEQUE_ENSURE_CAPACITY(dest, src->capacity);
-  AocMemCopy(dest->items, src->items, sizeof(AOC_T) * src->length);
+  AocMemCopy(dest->items, src->items, sizeof(AOC_T) * src->capacity);
   dest->length = src->length;
   dest->head = src->head;
   dest->tail = src->tail;
@@ -89,7 +89,7 @@ DEQUE_LINKAGE void DEQUE_COPY(DEQUE_NAME *const dest,
 DEQUE_LINKAGE void DEQUE_DUPE(DEQUE_NAME *const dest,
                               const DEQUE_NAME *const src) {
   DEQUE_CREATE(dest, src->capacity);
-  AocMemCopy(dest->items, src->items, sizeof(AOC_T) * src->length);
+  AocMemCopy(dest->items, src->items, sizeof(AOC_T) * src->capacity);
   dest->length = src->length;
   dest->head = src->head;
   dest->tail = src->tail;
