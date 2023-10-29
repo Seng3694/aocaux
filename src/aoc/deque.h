@@ -220,7 +220,7 @@ DEQUE_LINKAGE bool DEQUE_ITERATE_REV(DEQUE_ITER_NAME *const iter,
                                      AOC_T *const out) {
   if (iter->current == iter->deque->length)
     return false;
-  i64 index = (i64)iter->deque->tail - (i64)iter->current;
+  i64 index = ((i64)iter->deque->tail - 1) - (i64)iter->current;
   if (index < 0)
     index = iter->deque->capacity + index;
   *out = iter->deque->items[index];
