@@ -7,55 +7,54 @@ typedef struct {
 } vec2i;
 
 #define AOC_T vec2i
-#define AOC_T_NAME Vec2i
 #define AOC_BASE2_CAPACITY
 #include <aoc/deque.h>
 
 int main(void) {
-  AocDequeVec2i deque = {0};
-  AocDequeVec2iCreate(&deque, 32);
+  aoc_deque_vec2i deque = {0};
+  aoc_deque_vec2i_create(&deque, 32);
 
   assert(deque.capacity == 32);
   assert(deque.length == 0);
 
-  AocDequeVec2iPushBack(&deque, (vec2i){1, 2});
+  aoc_deque_vec2i_push_back(&deque, (vec2i){1, 2});
   assert(deque.capacity == 32);
   assert(deque.length == 1);
-  assert(AocDequeVec2iPeekFront(&deque)->x == 1);
-  assert(AocDequeVec2iPeekFront(&deque)->y == 2);
-  assert(AocDequeVec2iPeekBack(&deque)->x == 1);
-  assert(AocDequeVec2iPeekBack(&deque)->y == 2);
+  assert(aoc_deque_vec2i_peek_front(&deque)->x == 1);
+  assert(aoc_deque_vec2i_peek_front(&deque)->y == 2);
+  assert(aoc_deque_vec2i_peek_back(&deque)->x == 1);
+  assert(aoc_deque_vec2i_peek_back(&deque)->y == 2);
 
-  AocDequeVec2iPopBack(&deque);
+  aoc_deque_vec2i_pop_back(&deque);
   assert(deque.capacity == 32);
   assert(deque.length == 0);
-  AocDequeVec2iPushFront(&deque, (vec2i){1, 2});
+  aoc_deque_vec2i_push_front(&deque, (vec2i){1, 2});
   assert(deque.capacity == 32);
   assert(deque.length == 1);
-  AocDequeVec2iPopFront(&deque);
+  aoc_deque_vec2i_pop_front(&deque);
   assert(deque.capacity == 32);
   assert(deque.length == 0);
 
   for (int i = 0; i < 10; ++i) {
     if (i % 2 == 0)
-      AocDequeVec2iPushBack(&deque, (vec2i){i, i});
+      aoc_deque_vec2i_push_back(&deque, (vec2i){i, i});
     else
-      AocDequeVec2iPushFront(&deque, (vec2i){i, i});
+      aoc_deque_vec2i_push_front(&deque, (vec2i){i, i});
   }
 
   const int expectedSequence[] = {9, 7, 5, 3, 1, 0, 2, 4, 6, 8};
   int index = 0;
   while (deque.length > 0) {
-    const int value = AocDequeVec2iPeekFront(&deque)->x;
-    AocDequeVec2iPopFront(&deque);
+    const int value = aoc_deque_vec2i_peek_front(&deque)->x;
+    aoc_deque_vec2i_pop_front(&deque);
     assert(value == expectedSequence[index++]);
   }
 
   for (int i = 0; i < 42; ++i)
-    AocDequeVec2iPushBack(&deque, (vec2i){i, i});
+    aoc_deque_vec2i_push_back(&deque, (vec2i){i, i});
 
   assert(deque.length == 42);
   assert(deque.capacity == 64);
 
-  AocDequeVec2iDestroy(&deque);
+  aoc_deque_vec2i_destroy(&deque);
 }
