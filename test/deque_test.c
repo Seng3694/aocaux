@@ -43,12 +43,21 @@ int main(void) {
   }
 
   const int expectedSequence[] = {9, 7, 5, 3, 1, 0, 2, 4, 6, 8};
+  aoc_deque_iter_vec2i iter = {0};
+  aoc_deque_iter_vec2i_init(&iter, &deque);
+  vec2i v = {0};
   int index = 0;
-  while (deque.length > 0) {
-    const int value = aoc_deque_vec2i_peek_front(&deque)->x;
-    aoc_deque_vec2i_pop_front(&deque);
-    assert(value == expectedSequence[index++]);
+  while (aoc_deque_vec2i_iterate(&iter, &v))
+    assert(v.x == expectedSequence[index++]);
+
+  index = 0;
+  aoc_deque_iter_vec2i_init(&iter, &deque);
+  while (aoc_deque_vec2i_iterate_rev(&iter, &v)) {
+    assert(v.x == expectedSequence[9 - index]);
+    index++;
   }
+
+  aoc_deque_vec2i_clear(&deque);
 
   for (int i = 0; i < 42; ++i)
     aoc_deque_vec2i_push_back(&deque, (vec2i){i, i});
