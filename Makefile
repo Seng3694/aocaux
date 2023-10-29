@@ -28,8 +28,7 @@ INCLUDE:=$(SRC)/aoc
 
 TESTS:=$(wildcard test/*_test.c)
 
-OBJS:=$(BIN)/arena.o \
-  $(BIN)/bits.o \
+OBJS:=$(BIN)/bits.o \
   $(BIN)/filesystem.o \
   $(BIN)/md5.o \
   $(BIN)/string.o \
