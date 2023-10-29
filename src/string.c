@@ -2,7 +2,7 @@
 #include "aoc/common.h"
 #include <ctype.h>
 
-void AocTrimRight(char *const str, size_t *const length) {
+void aoc_trim_right(char *const str, size_t *const length) {
   if (*length == 0)
     return;
   char *current = &str[*length - 1];

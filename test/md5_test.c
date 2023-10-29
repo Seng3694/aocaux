@@ -23,8 +23,8 @@ int main(void) {
   char buffer[33] = {0};
   uint8_t hashBuffer[16] = {0};
   for (size_t i = 0; i < count; ++i) {
-    AocMD5(data[i].input, strlen(data[i].input), hashBuffer);
-    AocMD5ResultToString(hashBuffer, buffer);
+    aoc_md5(data[i].input, strlen(data[i].input), hashBuffer);
+    aoc_md5_string(hashBuffer, buffer);
     printf("%s\n", buffer);
     assert(strcmp(data[i].expected, buffer) == 0);
   }

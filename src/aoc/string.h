@@ -3,6 +3,6 @@
 
 #include "common.h"
 
-void AocTrimRight(char *const str, size_t *const length);
+void aoc_trim_right(char *const str, size_t *const length);
 
 #endif
