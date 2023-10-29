@@ -18,12 +18,13 @@ typedef struct {
   void *allocator;
 } aoc_allocator;
 
-void AocMemSetAllocator(aoc_allocator *const allocator);
-void *AocAlloc(AOC_SIZE_T size);
-void *AocRealloc(void *old, AOC_SIZE_T size);
-void *AocCalloc(AOC_SIZE_T count, AOC_SIZE_T size);
-void AocFree(void *ptr);
+void aoc_set_allocator(aoc_allocator *const allocator);
+void *aoc_alloc(AOC_SIZE_T size);
+void *aoc_realloc(void *old, AOC_SIZE_T size);
+void *aoc_calloc(AOC_SIZE_T count, AOC_SIZE_T size);
+void aoc_free(void *ptr);
 
-void AocMemCopy(void *const dest, const void *const src, const AOC_SIZE_T size);
+void aoc_mem_copy(void *const dest, const void *const src,
+                  const AOC_SIZE_T size);
 
 #endif

@@ -4,10 +4,10 @@
 #include <limits.h>
 
 typedef struct {
-  uint64_t size;
-  uint32_t buffer[4];
-  uint8_t input[64];
-  uint8_t digest[16];
+  u64 size;
+  u32 buffer[4];
+  u8 input[64];
+  u8 digest[16];
 } md5_context;
 
 #define A 0x67452301u
@@ -20,14 +20,14 @@ typedef struct {
 #define H(b, c, d) ((b) ^ (c) ^ (d))
 #define I(b, c, d) ((c) ^ ((b) | (~(d))))
 
-const uint32_t S[] = {
+const u32 S[] = {
     7, 12, 17, 22, 7, 12, 17, 22, 7, 12, 17, 22, 7, 12, 17, 22,
     5, 9,  14, 20, 5, 9,  14, 20, 5, 9,  14, 20, 5, 9,  14, 20,
     4, 11, 16, 23, 4, 11, 16, 23, 4, 11, 16, 23, 4, 11, 16, 23,
     6, 10, 15, 21, 6, 10, 15, 21, 6, 10, 15, 21, 6, 10, 15, 21,
 };
 
-const uint32_t K[] = {
+const u32 K[] = {
     0xd76aa478, 0xe8c7b756, 0x242070db, 0xc1bdceee, 0xf57c0faf, 0x4787c62a,
     0xa8304613, 0xfd469501, 0x698098d8, 0x8b44f7af, 0xffff5bb1, 0x895cd7be,
     0x6b901122, 0xfd987193, 0xa679438e, 0x49b40821, 0xf61e2562, 0xc040b340,
@@ -41,7 +41,7 @@ const uint32_t K[] = {
     0xf7537e82, 0xbd3af235, 0x2ad7d2bb, 0xeb86d391,
 };
 
-const uint8_t PADDING[] = {
+const u8 PADDING[] = {
     0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -50,20 +50,20 @@ const uint8_t PADDING[] = {
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 };
 
-static inline uint32_t rotate_left(uint32_t n, unsigned int c) {
+static inline u32 rotate_left(u32 n, unsigned int c) {
   const unsigned int mask = (CHAR_BIT * sizeof(n) - 1);
   c &= mask;
   return (n << c) | (n >> ((-c) & mask));
 }
 
-static void md5_step(uint32_t *buffer, uint32_t *input) {
-  uint32_t AA = buffer[0];
-  uint32_t BB = buffer[1];
-  uint32_t CC = buffer[2];
-  uint32_t DD = buffer[3];
-  uint32_t E = 0;
+static void md5_step(u32 *buffer, u32 *input) {
+  u32 AA = buffer[0];
+  u32 BB = buffer[1];
+  u32 CC = buffer[2];
+  u32 DD = buffer[3];
+  u32 E = 0;
 
-  for (uint32_t i = 0, j = 0; i < 64; ++i) {
+  for (u32 i = 0, j = 0; i < 64; ++i) {
     switch (i / 16) {
     case 0:
       E = F(BB, CC, DD);
@@ -83,7 +83,7 @@ static void md5_step(uint32_t *buffer, uint32_t *input) {
       break;
     }
 
-    uint32_t temp = DD;
+    u32 temp = DD;
     DD = CC;
     CC = BB;
     BB = BB + rotate_left(AA + E + K[i] + input[j], S[i]);
@@ -96,21 +96,21 @@ static void md5_step(uint32_t *buffer, uint32_t *input) {
   buffer[3] += DD;
 }
 
-static void md5_update(md5_context *ctx, const uint8_t *const inputBuffer,
+static void md5_update(md5_context *ctx, const u8 *const inputBuffer,
                        const size_t inputLength) {
-  uint32_t offset = ctx->size % 64;
-  uint32_t input[16] = {0};
-  ctx->size += (uint64_t)inputLength;
+  u32 offset = ctx->size % 64;
+  u32 input[16] = {0};
+  ctx->size += (u64)inputLength;
 
-  for (uint32_t i = 0; i < inputLength; ++i) {
-    ctx->input[offset++] = (uint8_t) * (inputBuffer + i);
+  for (u32 i = 0; i < inputLength; ++i) {
+    ctx->input[offset++] = (u8) * (inputBuffer + i);
 
     if (offset % 64 == 0) {
-      for (uint32_t j = 0; j < 16; ++j) {
-        input[j] = (uint32_t)(ctx->input[(j * 4) + 3]) << 24 |
-                   (uint32_t)(ctx->input[(j * 4) + 2]) << 16 |
-                   (uint32_t)(ctx->input[(j * 4) + 1]) << 8 |
-                   (uint32_t)(ctx->input[(j * 4)]);
+      for (u32 j = 0; j < 16; ++j) {
+        input[j] = (u32)(ctx->input[(j * 4) + 3]) << 24 |
+                   (u32)(ctx->input[(j * 4) + 2]) << 16 |
+                   (u32)(ctx->input[(j * 4) + 1]) << 8 |
+                   (u32)(ctx->input[(j * 4)]);
       }
 
       md5_step(ctx->buffer, input);
@@ -120,46 +120,45 @@ static void md5_update(md5_context *ctx, const uint8_t *const inputBuffer,
 }
 
 static void md5_finalize(md5_context *ctx) {
-  uint32_t input[16];
-  uint32_t offset = ctx->size % 64;
-  uint32_t paddingLength = offset < 56 ? 56 - offset : (56 + 64) - offset;
+  u32 input[16];
+  u32 offset = ctx->size % 64;
+  u32 paddingLength = offset < 56 ? 56 - offset : (56 + 64) - offset;
 
   md5_update(ctx, PADDING, paddingLength);
-  ctx->size -= (uint64_t)paddingLength;
+  ctx->size -= (u64)paddingLength;
 
-  for (uint32_t j = 0; j < 14; ++j) {
-    input[j] = (uint32_t)(ctx->input[(j * 4) + 3]) << 24 |
-               (uint32_t)(ctx->input[(j * 4) + 2]) << 16 |
-               (uint32_t)(ctx->input[(j * 4) + 1]) << 8 |
-               (uint32_t)(ctx->input[(j * 4)]);
+  for (u32 j = 0; j < 14; ++j) {
+    input[j] = (u32)(ctx->input[(j * 4) + 3]) << 24 |
+               (u32)(ctx->input[(j * 4) + 2]) << 16 |
+               (u32)(ctx->input[(j * 4) + 1]) << 8 | (u32)(ctx->input[(j * 4)]);
   }
-  input[14] = (uint32_t)(ctx->size * 8);
-  input[15] = (uint32_t)((ctx->size * 8) >> 32);
+  input[14] = (u32)(ctx->size * 8);
+  input[15] = (u32)((ctx->size * 8) >> 32);
 
   md5_step(ctx->buffer, input);
 
-  for (uint32_t i = 0; i < 4; ++i) {
-    ctx->digest[(i * 4) + 0] = (uint8_t)((ctx->buffer[i] & 0x000000FF));
-    ctx->digest[(i * 4) + 1] = (uint8_t)((ctx->buffer[i] & 0x0000FF00) >> 8);
-    ctx->digest[(i * 4) + 2] = (uint8_t)((ctx->buffer[i] & 0x00FF0000) >> 16);
-    ctx->digest[(i * 4) + 3] = (uint8_t)((ctx->buffer[i] & 0xFF000000) >> 24);
+  for (u32 i = 0; i < 4; ++i) {
+    ctx->digest[(i * 4) + 0] = (u8)((ctx->buffer[i] & 0x000000FF));
+    ctx->digest[(i * 4) + 1] = (u8)((ctx->buffer[i] & 0x0000FF00) >> 8);
+    ctx->digest[(i * 4) + 2] = (u8)((ctx->buffer[i] & 0x00FF0000) >> 16);
+    ctx->digest[(i * 4) + 3] = (u8)((ctx->buffer[i] & 0xFF000000) >> 24);
   }
 }
 
-void AocMD5(const char *text, const size_t length, uint8_t *const result) {
+void aoc_md5(const char *text, const size_t length, u8 *const result) {
   md5_context ctx = {
       .size = 0,
       .buffer = {A, B, C, D},
   };
-  md5_update(&ctx, (uint8_t *)text, length);
+  md5_update(&ctx, (u8 *)text, length);
   md5_finalize(&ctx);
-  AocMemCopy(result, ctx.digest, 16);
+  aoc_mem_copy(result, ctx.digest, 16);
 }
 
 static const char hexMapping[] = "0123456789abcdef";
 
-void AocMD5ResultToString(const uint8_t *const result, char *const buffer) {
-  for (uint8_t i = 0, j = 0; i < 16; i++, j += 2) {
+void aoc_md5_string(const u8 *const result, char *const buffer) {
+  for (u8 i = 0, j = 0; i < 16; i++, j += 2) {
     buffer[j] = hexMapping[(result[i] & 0xf0) >> 4];
     buffer[j + 1] = hexMapping[result[i] & 0x0f];
   }
