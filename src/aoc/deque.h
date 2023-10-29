@@ -190,7 +190,7 @@ typedef struct {
   AOC_SIZE_T current;
 } DEQUE_ITER_NAME;
 
-#define DEQUE_ITER_INIT DEQUE_ITER_IMPL(init_front)
+#define DEQUE_ITER_INIT DEQUE_ITER_IMPL(init)
 #define DEQUE_ITERATE DEQUE_IMPL(iterate)
 #define DEQUE_ITERATE_REV DEQUE_IMPL(iterate_rev)
 
