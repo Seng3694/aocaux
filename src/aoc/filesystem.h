@@ -3,15 +3,16 @@
 
 #include "common.h"
 
-typedef void (*aoc_line_func)(char *line, size_t length, void *userData);
+typedef void (*aoc_line_func)(char *line, void *userData);
+typedef void (*aoc_line_num_func)(char *line, void *userData,
+                                  const size_t lineNumber);
 
-typedef void (*aoc_line_ex_func)(char *line, size_t length, void *userData,
-                                 const size_t lineNumber);
-
-bool AocReadFileLineByLine(const char *path, aoc_line_func func,
-                           void *userData);
-bool AocReadFileLineByLineEx(const char *path, aoc_line_ex_func func,
-                             void *userData);
-bool AocReadFileToString(const char *path, char **output, size_t *length);
+bool aoc_file_read_lines1(const char *path, aoc_line_func func, void *userData);
+bool aoc_file_read_lines2(const char *path, aoc_line_num_func func,
+                          void *userData);
+bool aoc_file_read_lines3(const char *path, aoc_line_func begin,
+                          aoc_line_num_func func, aoc_line_num_func end,
+                          void *userData);
+bool aoc_file_read_all(const char *path, char **output, size_t *length);
 
 #endif
