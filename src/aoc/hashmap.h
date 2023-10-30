@@ -3,14 +3,14 @@
 
 // these macros have to be defined
 // #define AOC_KEY_T
-// #define AOC_KEY_T_NAME
 // #define AOC_VALUE_T
-// #define AOC_VALUE_T_NAME
 // #define AOC_KEY_T_EMPTY
 // #define AOC_KEY_T_HFUNC
 // #define AOC_KEY_T_EQUALS
 
 // this macros are optional
+// #define AOC_KEY_T_NAME
+// #define AOC_VALUE_T_NAME
 // #define AOC_BASE2_CAPACITY
 
 #ifndef AOC_KEY_T
@@ -18,7 +18,7 @@
 #endif
 
 #ifndef AOC_KEY_T_NAME
-#error "AOC_KEY_T_NAME must be defined"
+#define AOC_KEY_T_NAME AOC_KEY_T
 #endif
 
 #ifndef AOC_VALUE_T
@@ -26,7 +26,7 @@
 #endif
 
 #ifndef AOC_VALUE_T_NAME
-#error "AOC_VALUE_T_NAME must be defined"
+#define AOC_VALUE_T_NAME AOC_VALUE_T
 #endif
 
 #ifndef AOC_KEY_T_EMPTY
@@ -50,9 +50,10 @@
 #define COMBINE(a, b) a##b
 #define COMBINE2(a, b) COMBINE(a, b)
 
-#define HM_NAME COMBINE2(COMBINE2(AocHashmap, AOC_KEY_T_NAME), AOC_VALUE_T_NAME)
-#define HM_IMPL(word) COMBINE2(HM_NAME, word)
-#define HM_IMPL_INTERNAL(word) COMBINE2(_, COMBINE2(HM_NAME, word))
+#define HM_NAME                                                                \
+  COMBINE2(COMBINE2(COMBINE2(aoc_map_, AOC_KEY_T_NAME), _), AOC_VALUE_T_NAME)
+#define HM_IMPL(word) COMBINE2(COMBINE2(HM_NAME, _), word)
+#define HM_IMPL_INTERNAL(word) COMBINE2(_, COMBINE2(COMBINE2(HM_NAME, _), word))
 #define HM_LINKAGE static inline
 #define HM_MAX_LOAD 0.75
 
@@ -63,18 +64,18 @@ typedef struct {
   AOC_VALUE_T *values;
 } HM_NAME;
 
-#define HM_CREATE HM_IMPL(Create)
-#define HM_DESTROY HM_IMPL(Destroy)
-#define HM_ADJUST_CAP HM_IMPL_INTERNAL(AdjustCapacity)
-#define HM_INSERT_INTERNAL HM_IMPL_INTERNAL(Insert)
-#define HM_INSERT HM_IMPL(Insert)
-#define HM_GET HM_IMPL(Get)
-#define HM_GET_PH HM_IMPL(GetPrehashed)
-#define HM_INSERT_PH HM_IMPL(InsertPreHashed)
-#define HM_REMOVE HM_IMPL(Remove)
-#define HM_REMOVE_PH HM_IMPL(RemovePreHashed)
-#define HM_CLEAR HM_IMPL(Clear)
-#define HM_CONTAINS HM_IMPL(Contains)
+#define HM_CREATE HM_IMPL(create)
+#define HM_DESTROY HM_IMPL(destroy)
+#define HM_ADJUST_CAP HM_IMPL_INTERNAL(adjust_capacity)
+#define HM_INSERT_INTERNAL HM_IMPL_INTERNAL(insert)
+#define HM_INSERT HM_IMPL(insert)
+#define HM_GET HM_IMPL(get)
+#define HM_GET_PH HM_IMPL(get_pre_hashed)
+#define HM_INSERT_PH HM_IMPL(insert_pre_hashed)
+#define HM_REMOVE HM_IMPL(remove)
+#define HM_REMOVE_PH HM_IMPL(remove_pre_hashed)
+#define HM_CLEAR HM_IMPL(clear)
+#define HM_CONTAINS HM_IMPL(contains)
 
 HM_LINKAGE void HM_CREATE(HM_NAME *const hm, const AOC_SIZE_T capacity);
 HM_LINKAGE void HM_DESTROY(HM_NAME *hm);
@@ -83,47 +84,48 @@ HM_LINKAGE void HM_ADJUST_CAP(HM_NAME *hm, const AOC_SIZE_T capacity);
 HM_LINKAGE void HM_INSERT_INTERNAL(AOC_KEY_T *keys, AOC_VALUE_T *values,
                                    const AOC_SIZE_T capacity,
                                    const AOC_KEY_T key, AOC_VALUE_T value,
-                                   const uint32_t *hash);
+                                   const u32 *hash);
 
 HM_LINKAGE void HM_INSERT(HM_NAME *const hm, const AOC_KEY_T key,
                           AOC_VALUE_T value);
 
 HM_LINKAGE void HM_INSERT_PH(HM_NAME *const hm, const AOC_KEY_T key,
-                             AOC_VALUE_T value, const uint32_t hash);
+                             AOC_VALUE_T value, const u32 hash);
 
 HM_LINKAGE bool HM_GET(const HM_NAME *const hm, const AOC_KEY_T key,
                        AOC_VALUE_T *out);
 
 HM_LINKAGE bool HM_GET_PH(const HM_NAME *const hm, const AOC_KEY_T key,
-                          const uint32_t hash, AOC_VALUE_T *out);
+                          const u32 hash, AOC_VALUE_T *out);
 
 HM_LINKAGE void HM_REMOVE(HM_NAME *const hm, const AOC_KEY_T key);
 HM_LINKAGE void HM_REMOVE_PH(HM_NAME *const hm, const AOC_KEY_T key,
-                             const uint32_t hash);
+                             const u32 hash);
 
 HM_LINKAGE void HM_CLEAR(HM_NAME *const hm);
 
 HM_LINKAGE bool HM_CONTAINS(const HM_NAME *const hm, const AOC_KEY_T key,
-                            uint32_t *hash);
+                            u32 *hash);
 
 HM_LINKAGE void HM_CREATE(HM_NAME *const hm, const AOC_SIZE_T capacity) {
   hm->capacity = capacity;
   hm->count = 0;
-  hm->keys = (AOC_KEY_T *)AocAlloc(sizeof(AOC_KEY_T) * hm->capacity);
-  hm->values = (AOC_VALUE_T *)AocAlloc(sizeof(AOC_VALUE_T) * hm->capacity);
+  hm->keys = (AOC_KEY_T *)aoc_alloc(sizeof(AOC_KEY_T) * hm->capacity);
+  hm->values = (AOC_VALUE_T *)aoc_alloc(sizeof(AOC_VALUE_T) * hm->capacity);
   for (AOC_SIZE_T i = 0; i < capacity; ++i) {
     hm->keys[i] = AOC_KEY_T_EMPTY;
   }
 }
 
 HM_LINKAGE void HM_DESTROY(HM_NAME *hm) {
-  AocFree(hm->keys);
-  AocFree(hm->values);
+  aoc_free(hm->keys);
+  aoc_free(hm->values);
 }
 
 HM_LINKAGE void HM_ADJUST_CAP(HM_NAME *hm, const AOC_SIZE_T capacity) {
-  AOC_KEY_T *keys = (AOC_KEY_T *)AocAlloc(sizeof(AOC_KEY_T) * capacity);
-  AOC_VALUE_T *values = (AOC_VALUE_T *)AocAlloc(sizeof(AOC_VALUE_T) * capacity);
+  AOC_KEY_T *keys = (AOC_KEY_T *)aoc_alloc(sizeof(AOC_KEY_T) * capacity);
+  AOC_VALUE_T *values =
+      (AOC_VALUE_T *)aoc_alloc(sizeof(AOC_VALUE_T) * capacity);
 
   for (AOC_SIZE_T i = 0; i < capacity; ++i) {
     keys[i] = AOC_KEY_T_EMPTY;
@@ -139,8 +141,8 @@ HM_LINKAGE void HM_ADJUST_CAP(HM_NAME *hm, const AOC_SIZE_T capacity) {
     hm->count++;
   }
 
-  AocFree(hm->keys);
-  AocFree(hm->values);
+  aoc_free(hm->keys);
+  aoc_free(hm->values);
   hm->keys = keys;
   hm->values = values;
   hm->capacity = capacity;
@@ -149,9 +151,9 @@ HM_LINKAGE void HM_ADJUST_CAP(HM_NAME *hm, const AOC_SIZE_T capacity) {
 HM_LINKAGE void HM_INSERT_INTERNAL(AOC_KEY_T *keys, AOC_VALUE_T *values,
                                    const AOC_SIZE_T capacity,
                                    const AOC_KEY_T key, AOC_VALUE_T value,
-                                   const uint32_t *hash) {
-  const uint32_t keyHash = hash ? *hash : AOC_KEY_T_HFUNC(&key);
-  uint32_t index = HM_MOD(keyHash, capacity);
+                                   const u32 *hash) {
+  const u32 keyHash = hash ? *hash : AOC_KEY_T_HFUNC(&key);
+  u32 index = HM_MOD(keyHash, capacity);
   for (;;) {
     AOC_KEY_T *entry = &keys[index];
     if (AOC_KEY_T_EQUALS(entry, &AOC_KEY_T_EMPTY)) {
@@ -174,7 +176,7 @@ HM_LINKAGE void HM_INSERT(HM_NAME *const hm, const AOC_KEY_T key,
 }
 
 HM_LINKAGE void HM_INSERT_PH(HM_NAME *const hm, const AOC_KEY_T key,
-                             AOC_VALUE_T value, const uint32_t hash) {
+                             AOC_VALUE_T value, const u32 hash) {
   if (hm->count + 1 > hm->capacity * HM_MAX_LOAD) {
     const AOC_SIZE_T capacity = hm->capacity * 2;
     HM_ADJUST_CAP(hm, capacity);
@@ -185,13 +187,13 @@ HM_LINKAGE void HM_INSERT_PH(HM_NAME *const hm, const AOC_KEY_T key,
 
 HM_LINKAGE bool HM_GET(const HM_NAME *const hm, const AOC_KEY_T key,
                        AOC_VALUE_T *out) {
-  const uint32_t keyHash = AOC_KEY_T_HFUNC(&key);
+  const u32 keyHash = AOC_KEY_T_HFUNC(&key);
   return HM_GET_PH(hm, key, keyHash, out);
 }
 
 HM_LINKAGE bool HM_GET_PH(const HM_NAME *const hm, const AOC_KEY_T key,
-                          const uint32_t hash, AOC_VALUE_T *out) {
-  uint32_t index = HM_MOD(hash, hm->capacity);
+                          const u32 hash, AOC_VALUE_T *out) {
+  u32 index = HM_MOD(hash, hm->capacity);
   for (;;) {
     AOC_KEY_T *entry = &hm->keys[index];
     if (AOC_KEY_T_EQUALS(entry, &AOC_KEY_T_EMPTY)) {
@@ -205,13 +207,13 @@ HM_LINKAGE bool HM_GET_PH(const HM_NAME *const hm, const AOC_KEY_T key,
 }
 
 HM_LINKAGE void HM_REMOVE(HM_NAME *const hm, const AOC_KEY_T key) {
-  const uint32_t keyHash = AOC_KEY_T_HFUNC(&key);
+  const u32 keyHash = AOC_KEY_T_HFUNC(&key);
   HM_REMOVE_PH(hm, key, keyHash);
 }
 
 HM_LINKAGE void HM_REMOVE_PH(HM_NAME *const hm, const AOC_KEY_T key,
-                             const uint32_t hash) {
-  uint32_t index = HM_MOD(hash, hm->capacity);
+                             const u32 hash) {
+  u32 index = HM_MOD(hash, hm->capacity);
   for (;;) {
     AOC_KEY_T *entry = &hm->keys[index];
     if (AOC_KEY_T_EQUALS(entry, &AOC_KEY_T_EMPTY)) {
@@ -233,13 +235,13 @@ HM_LINKAGE void HM_CLEAR(HM_NAME *const hm) {
 }
 
 HM_LINKAGE bool HM_CONTAINS(const HM_NAME *const hm, const AOC_KEY_T key,
-                            uint32_t *hash) {
-  const uint32_t keyHash = AOC_KEY_T_HFUNC(&key);
+                            u32 *hash) {
+  const u32 keyHash = AOC_KEY_T_HFUNC(&key);
   if (hash)
     *hash = keyHash;
   if (hm->count == 0)
     return false;
-  uint32_t index = HM_MOD(keyHash, hm->capacity);
+  u32 index = HM_MOD(keyHash, hm->capacity);
   for (;;) {
     AOC_KEY_T *entry = &hm->keys[index];
     if (AOC_KEY_T_EQUALS(entry, &AOC_KEY_T_EMPTY)) {
@@ -249,6 +251,47 @@ HM_LINKAGE bool HM_CONTAINS(const HM_NAME *const hm, const AOC_KEY_T key,
     }
     index = HM_MOD(index + 1, hm->capacity);
   }
+}
+
+#define HM_ITER_NAME                                                           \
+  COMBINE2(COMBINE2(COMBINE2(aoc_map_iter_, AOC_KEY_T_NAME), _),               \
+           AOC_VALUE_T_NAME)
+#define HM_ITER_IMPL(word) COMBINE2(HM_ITER_NAME, COMBINE2(_, word))
+
+typedef struct {
+  HM_NAME *map;
+  AOC_SIZE_T current;
+} HM_ITER_NAME;
+
+#define HM_ITER_INIT HM_ITER_IMPL(init)
+#define HM_ITERATE HM_IMPL(iterate)
+
+HM_LINKAGE void HM_ITER_INIT(HM_ITER_NAME *const iter, HM_NAME *const map);
+HM_LINKAGE bool HM_ITERATE(HM_ITER_NAME *const iter, AOC_KEY_T *const key,
+                           AOC_VALUE_T *const value);
+
+HM_LINKAGE void HM_ITER_INIT(HM_ITER_NAME *const iter, HM_NAME *const map) {
+  iter->map = map;
+  iter->current = 0;
+}
+
+HM_LINKAGE bool HM_ITERATE(HM_ITER_NAME *const iter, AOC_KEY_T *const key,
+                           AOC_VALUE_T *const value) {
+  if (iter->map->count == 0)
+    return false;
+
+  while (iter->current < iter->map->capacity &&
+         AOC_KEY_T_EQUALS(&iter->map->keys[iter->current], &AOC_KEY_T_EMPTY)) {
+    iter->current++;
+  }
+
+  if (iter->current == iter->map->capacity)
+    return false;
+
+  *key = iter->map->keys[iter->current];
+  *value = iter->map->values[iter->current];
+  iter->current++;
+  return true;
 }
 
 #undef AOC_KEY_T
@@ -283,3 +326,8 @@ HM_LINKAGE bool HM_CONTAINS(const HM_NAME *const hm, const AOC_KEY_T key,
 #undef HM_REMOVE_PH
 #undef HM_CLEAR
 #undef HM_CONTAINS
+
+#undef HM_ITER_NAME
+#undef HM_ITER_IMPL
+#undef HM_ITER_INIT
+#undef HM_ITERATE
