@@ -48,17 +48,17 @@ static const string EMPTY_STRING = {0};
 #define AOC_VALUE_T position
 #define AOC_VALUE_T_NAME pos
 #define AOC_KEY_T_EMPTY EMPTY_STRING
-#define AOC_KEY_T_HFUNC calc_string_hash
+#define AOC_KEY_T_HASH calc_string_hash
 #define AOC_KEY_T_EQUALS string_equals
 #define AOC_BASE2_CAPACITY
-#include <aoc/hashmap.h>
+#include <aoc/map.h>
 
 int main(void) {
   aoc_map_str_pos map;
   aoc_map_str_pos_create(&map, 32);
 
-  assert(map.capacity == 32);
-  assert(map.count == 0);
+  assert(map.set.capacity == 32);
+  assert(map.set.count == 0);
 
   string strings[] = {
       create_string("hello world"),
@@ -70,8 +70,8 @@ int main(void) {
   aoc_map_str_pos_insert(&map, strings[1], (position){.x = 43, .y = 63});
   aoc_map_str_pos_insert(&map, strings[2], (position){.x = 123, .y = 45});
 
-  assert(map.capacity == 32);
-  assert(map.count == 3);
+  assert(map.set.capacity == 32);
+  assert(map.set.count == 3);
 
   position pos;
   bool found = aoc_map_str_pos_get(&map, strings[0], &pos);
@@ -88,8 +88,8 @@ int main(void) {
 
   aoc_map_str_pos_remove(&map, strings[1]);
 
-  assert(map.capacity == 32);
-  assert(map.count == 2);
+  assert(map.set.capacity == 32);
+  assert(map.set.count == 2);
 
   found = aoc_map_str_pos_get(&map, strings[1], &pos);
   assert(!found);
@@ -112,8 +112,8 @@ int main(void) {
   // this is fine because the strings used were not allocated
   aoc_map_str_pos_clear(&map);
 
-  assert(map.capacity == 32);
-  assert(map.count == 0);
+  assert(map.set.capacity == 32);
+  assert(map.set.count == 0);
 
   // check resize behavior
   // currently 0.75 is the hard coded threshold until it's getting resized
@@ -129,8 +129,8 @@ int main(void) {
     aoc_map_str_pos_insert(&map, s, p);
   }
 
-  assert(map.capacity == 64);
-  assert(map.count == 32);
+  assert(map.set.capacity == 64);
+  assert(map.set.count == 32);
 
   // try finding all items
   for (size_t i = 0; i < 32; ++i) {
@@ -152,4 +152,6 @@ int main(void) {
   assert(iterations == 32);
   aoc_map_str_pos_clear(&map);
   aoc_map_str_pos_destroy(&map);
+
+  printf("tests finished successfully\n");
 }
