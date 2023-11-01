@@ -12,8 +12,8 @@
 // #define AOC_BASE2_CAPACITY
 // #define AOC_KEY_T_NAME
 // #define AOC_VALUE_T_NAME
-// #define AOC_NO_IMPL
-// #define AOC_NO_SET_INCLUDE
+// #define AOC_MAP_NO_IMPL
+// #define AOC_SET_NO_IMPL
 
 #ifndef AOC_KEY_T
 #error "AOC_KEY_T must be defined"
@@ -52,7 +52,6 @@
 #define COMBINE(a, b) a##b
 #define COMBINE2(a, b) COMBINE(a, b)
 
-#ifndef AOC_NO_SET_INCLUDE
 #define AOC_INTERNAL_INCLUDE
 #define AOC_T AOC_KEY_T
 #define AOC_T_NAME AOC_KEY_T_NAME
@@ -60,7 +59,6 @@
 #define AOC_T_HASH AOC_KEY_T_HASH
 #define AOC_T_EQUALS AOC_KEY_T_EQUALS
 #include "set.h"
-#endif
 
 #define MAP_NAME                                                               \
   COMBINE2(aoc_map_, COMBINE2(AOC_KEY_T_NAME, COMBINE2(_, AOC_VALUE_T_NAME)))
@@ -89,13 +87,13 @@ typedef struct MAP_ITER_NAME MAP_ITER_NAME;
 #define MAP_INSERT MAP_IMPL(insert)
 #define MAP_REMOVE MAP_IMPL(remove)
 #define MAP_GET MAP_IMPL(get)
-#define MAP_SET MAP_IMPL(set)
+#define MAP_PUT MAP_IMPL(put)
 #define MAP_CONTAINS MAP_IMPL(contains)
 
 #define MAP_INSERT_PH MAP_IMPL(insert_pre_hashed)
 #define MAP_REMOVE_PH MAP_IMPL(remove_pre_hashed)
 #define MAP_GET_PH MAP_IMPL(get_pre_hashed)
-#define MAP_SET_PH MAP_IMPL(set_pre_hashed)
+#define MAP_PUT_PH MAP_IMPL(put_pre_hashed)
 
 #define MAP_CONTAINS_PH MAP_IMPL(contains_pre_hashed)
 
@@ -117,7 +115,7 @@ MAP_LINKAGE void MAP_INSERT(MAP_NAME *const map, const AOC_KEY_T key,
 MAP_LINKAGE void MAP_REMOVE(MAP_NAME *const map, const AOC_KEY_T key);
 MAP_LINKAGE bool MAP_GET(MAP_NAME *const map, const AOC_KEY_T key,
                          AOC_VALUE_T *const value);
-MAP_LINKAGE void MAP_SET(MAP_NAME *const map, const AOC_KEY_T key,
+MAP_LINKAGE void MAP_PUT(MAP_NAME *const map, const AOC_KEY_T key,
                          const AOC_VALUE_T value);
 MAP_LINKAGE bool MAP_CONTAINS(const MAP_NAME *const map, const AOC_KEY_T key);
 
@@ -127,7 +125,7 @@ MAP_LINKAGE void MAP_REMOVE_PH(MAP_NAME *const map, const AOC_KEY_T key,
                                const u32 hash);
 MAP_LINKAGE bool MAP_GET_PH(MAP_NAME *const map, const AOC_KEY_T key,
                             AOC_VALUE_T *const value, const u32 hash);
-MAP_LINKAGE void MAP_SET_PH(MAP_NAME *const map, const AOC_KEY_T key,
+MAP_LINKAGE void MAP_PUT_PH(MAP_NAME *const map, const AOC_KEY_T key,
                             const AOC_VALUE_T value, const u32 hash);
 MAP_LINKAGE bool MAP_CONTAINS_PH(const MAP_NAME *const map, const AOC_KEY_T key,
                                  const u32 hash);
@@ -233,12 +231,12 @@ MAP_LINKAGE bool MAP_GET_PH(MAP_NAME *const map, const AOC_KEY_T key,
   return false;
 }
 
-MAP_LINKAGE void MAP_SET(MAP_NAME *const map, const AOC_KEY_T key,
+MAP_LINKAGE void MAP_PUT(MAP_NAME *const map, const AOC_KEY_T key,
                          const AOC_VALUE_T value) {
-  MAP_SET_PH(map, key, value, AOC_KEY_T_HASH(&key));
+  MAP_PUT_PH(map, key, value, AOC_KEY_T_HASH(&key));
 }
 
-MAP_LINKAGE void MAP_SET_PH(MAP_NAME *const map, const AOC_KEY_T key,
+MAP_LINKAGE void MAP_PUT_PH(MAP_NAME *const map, const AOC_KEY_T key,
                             const AOC_VALUE_T value, const u32 hash) {
   AOC_SIZE_T index = 0;
   if (SET_FIND_ENTRY(map->set.entries, map->set.capacity, key, hash, &index)) {
@@ -329,8 +327,8 @@ MAP_LINKAGE bool MAP_ITERATE(MAP_ITER_NAME *const iter, AOC_KEY_T *const key,
 #undef AOC_BASE2_CAPACITY
 #endif
 
-#ifdef AOC_NO_IMPL
-#undef AOC_NO_IMPL
+#ifdef AOC_MAP_NO_IMPL
+#undef AOC_MAP_NO_IMPL
 #endif
 
 #undef MAP_NAME
@@ -349,20 +347,22 @@ MAP_LINKAGE bool MAP_ITERATE(MAP_ITER_NAME *const iter, AOC_KEY_T *const key,
 #undef MAP_INSERT
 #undef MAP_REMOVE
 #undef MAP_GET
-#undef MAP_SET
+#undef MAP_PUT
 #undef MAP_CONTAINS
 #undef MAP_INSERT_PH
 #undef MAP_REMOVE_PH
 #undef MAP_GET_PH
-#undef MAP_SET_PH
+#undef MAP_PUT_PH
 #undef MAP_CONTAINS_PH
 #undef MAP_CLEAR
 #undef MAP_COPY
 #undef MAP_DUPLICATE
 
-#ifndef AOC_NO_SET_INCLUDE
 // set internal defines
 #undef AOC_INTERNAL_INCLUDE
+#ifdef AOC_SET_NO_IMPL
+#undef AOC_SET_NO_IMPL
+#endif
 #undef AOC_T
 #undef AOC_T_NAME
 #undef AOC_T_EMPTY
@@ -393,4 +393,3 @@ MAP_LINKAGE bool MAP_ITERATE(MAP_ITER_NAME *const iter, AOC_KEY_T *const key,
 #undef SET_CLEAR
 #undef SET_COPY
 #undef SET_DUPLICATE
-#endif

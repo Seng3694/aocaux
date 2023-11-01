@@ -10,7 +10,7 @@
 // these macros are optional
 // #define AOC_BASE2_CAPACITY
 // #define AOC_T_NAME
-// #define AOC_NO_IMPL
+// #define AOC_SET_NO_IMPL
 
 #ifndef AOC_T
 #error "AOC_T must be defined"
@@ -106,8 +106,7 @@ SET_LINKAGE void SET_CLEAR(SET_NAME *const set);
 SET_LINKAGE void SET_COPY(SET_NAME *const dest, const SET_NAME *const src);
 SET_LINKAGE void SET_DUPLICATE(SET_NAME *const dest, const SET_NAME *const src);
 
-#ifndef AOC_NO_IMPL
-
+#ifndef AOC_SET_NO_IMPL
 typedef struct SET_NAME {
   AOC_SIZE_T capacity;
   AOC_SIZE_T count;
@@ -288,8 +287,8 @@ SET_LINKAGE bool SET_ITERATE(SET_ITER_NAME *const iter, AOC_T *const key) {
 #undef AOC_BASE2_CAPACITY
 #endif
 
-#ifdef AOC_NO_IMPL
-#undef AOC_NO_IMPL
+#ifdef AOC_SET_NO_IMPL
+#undef AOC_SET_NO_IMPL
 #endif
 
 #undef COMBINE
