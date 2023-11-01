@@ -36,6 +36,8 @@ typedef double f64;
 #define AOC_SIZE_T size_t
 #endif
 
+#define AOC_ARRAY_SIZE(arr) (sizeof(arr) / sizeof(arr[0]))
+
 #ifndef __has_builtin
 #define __has_builtin(x) 0
 #endif
