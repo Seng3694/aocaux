@@ -3,8 +3,10 @@
 
 // these macros have to be defined
 // #define AOC_T
-// #define AOC_T_NAME
 // #define AOC_T_COMPARE
+
+// optional
+// #define AOC_T_NAME
 // uses MinHeap as default. use this for MaxHeap:
 // #define AOC_MAX_HEAP
 
@@ -13,7 +15,7 @@
 #endif
 
 #ifndef AOC_T_NAME
-#error "AOC_T_NAME must be defined"
+#define AOC_T_NAME AOC_T
 #endif
 
 #ifndef AOC_T_COMPARE
@@ -21,17 +23,17 @@
 #endif
 
 #ifdef AOC_MAX_HEAP
-#define HP_TYPE Max
+#define HP_TYPE max
 #else
-#define HP_TYPE Min
+#define HP_TYPE min
 #endif
 
 #define COMBINE(a, b) a##b
 #define COMBINE2(a, b) COMBINE(a, b)
 
-#define HP_NAME COMBINE2(COMBINE2(COMBINE2(Aoc, HP_TYPE), Heap), AOC_T_NAME)
-#define HP_IMPL(word) COMBINE2(HP_NAME, word)
-#define HP_IMPL_INTERNAL(word) COMBINE2(_, COMBINE2(HP_NAME, word))
+#define HP_NAME COMBINE2(COMBINE2(COMBINE2(aoc_, HP_TYPE), _heap_), AOC_T_NAME)
+#define HP_IMPL(word) COMBINE2(COMBINE2(HP_NAME, _), word)
+#define HP_IMPL_INTERNAL(word) COMBINE2(_, HP_IMPL(word))
 #define HP_LINKAGE static inline
 
 #define HP_PARENT(i) (((i)-1) / 2)
@@ -44,16 +46,16 @@ typedef struct {
   AOC_T *items;
 } HP_NAME;
 
-#define HP_CREATE HP_IMPL(Create)
-#define HP_DESTROY HP_IMPL(Destroy)
-#define HP_PEEK HP_IMPL(Peek)
-#define HP_PUSH HP_IMPL(Push)
-#define HP_POP HP_IMPL(Pop)
+#define HP_CREATE HP_IMPL(create)
+#define HP_DESTROY HP_IMPL(destroy)
+#define HP_PEEK HP_IMPL(peek)
+#define HP_PUSH HP_IMPL(push)
+#define HP_POP HP_IMPL(pop)
 
-#define HP_SWAP HP_IMPL_INTERNAL(Swap)
-#define HP_ENSURE_CAPACITY HP_IMPL_INTERNAL(EnsureCapacity)
-#define HP_HEAPIFY_UP HP_IMPL_INTERNAL(HeapifyUp)
-#define HP_HEAPIFY_DOWN HP_IMPL_INTERNAL(HeapifyDown)
+#define HP_SWAP HP_IMPL_INTERNAL(swap)
+#define HP_ENSURE_CAPACITY HP_IMPL_INTERNAL(ensure_capacity)
+#define HP_HEAPIFY_UP HP_IMPL_INTERNAL(heapify_up)
+#define HP_HEAPIFY_DOWN HP_IMPL_INTERNAL(heapify_down)
 
 HP_LINKAGE void HP_CREATE(HP_NAME *const h, const AOC_SIZE_T capacity);
 HP_LINKAGE void HP_DESTROY(HP_NAME *const h);
@@ -69,11 +71,11 @@ HP_LINKAGE void HP_HEAPIFY_DOWN(HP_NAME *const h);
 HP_LINKAGE void HP_CREATE(HP_NAME *const h, const AOC_SIZE_T capacity) {
   h->capacity = capacity;
   h->count = 0;
-  h->items = (AOC_T *)AocAlloc(sizeof(AOC_T) * capacity);
+  h->items = (AOC_T *)aoc_alloc(sizeof(AOC_T) * capacity);
 }
 
 HP_LINKAGE void HP_DESTROY(HP_NAME *const h) {
-  AocFree(h->items);
+  aoc_free(h->items);
 }
 
 HP_LINKAGE void HP_PUSH(HP_NAME *const h, AOC_T item) {
@@ -103,14 +105,14 @@ HP_LINKAGE void HP_SWAP(AOC_T *const a, AOC_T *const b) {
 HP_LINKAGE void HP_ENSURE_CAPACITY(HP_NAME *const h, AOC_SIZE_T capacity) {
   if (h->capacity < capacity) {
     h->capacity = capacity * 2;
-    h->items = (AOC_T *)AocRealloc(h->items, sizeof(AOC_T) * h->capacity);
+    h->items = (AOC_T *)aoc_realloc(h->items, sizeof(AOC_T) * h->capacity);
   }
 }
 
 HP_LINKAGE void HP_HEAPIFY_UP(HP_NAME *const h) {
-  int64_t index = (int64_t)h->count - 1;
+  i64 index = (i64)h->count - 1;
   for (;;) {
-    const int64_t parent = HP_PARENT(index);
+    const i64 parent = HP_PARENT(index);
 
 #ifdef AOC_MAX_HEAP
     if (parent < 0 || AOC_T_COMPARE(&h->items[parent], &h->items[index]) >= 0)
@@ -125,25 +127,25 @@ HP_LINKAGE void HP_HEAPIFY_UP(HP_NAME *const h) {
 }
 
 HP_LINKAGE void HP_HEAPIFY_DOWN(HP_NAME *const h) {
-  int64_t index = 0;
+  i64 index = 0;
   for (;;) {
-    const int64_t leftChild = HP_LEFT_CHILD(index);
+    const i64 leftChild = HP_LEFT_CHILD(index);
     if (leftChild > h->count)
       break;
 
-    const int64_t rightChild = HP_RIGHT_CHILD(index);
+    const i64 rightChild = HP_RIGHT_CHILD(index);
 
 #ifdef AOC_MAX_HEAP
-    const int64_t bsChild =
-        rightChild < h->count &&
+    const i64 bsChild =
+        rightChild < (i64)h->count &&
                 AOC_T_COMPARE(&h->items[rightChild], &h->items[leftChild]) > 0
             ? rightChild
             : leftChild;
     if (AOC_T_COMPARE(&h->items[index], &h->items[bsChild]) > 0)
       break;
 #else
-    const int64_t bsChild =
-        rightChild < h->count &&
+    const i64 bsChild =
+        rightChild < (i64)h->count &&
                 AOC_T_COMPARE(&h->items[rightChild], &h->items[leftChild]) < 0
             ? rightChild
             : leftChild;
