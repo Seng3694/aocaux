@@ -104,7 +104,7 @@ HP_LINKAGE void HP_SWAP(AOC_T *const a, AOC_T *const b) {
 
 HP_LINKAGE void HP_ENSURE_CAPACITY(HP_NAME *const h, AOC_SIZE_T capacity) {
   if (h->capacity < capacity) {
-    h->capacity = capacity * 2;
+    h->capacity *= 2;
     h->items = (AOC_T *)aoc_realloc(h->items, sizeof(AOC_T) * h->capacity);
   }
 }
