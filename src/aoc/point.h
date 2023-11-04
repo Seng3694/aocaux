@@ -69,24 +69,6 @@ POINT_LINKAGE int POINT_IMPL(compare)(const void *const a,
     return 0;
   }
 #endif
-
-  //   if (xdiff == 0) {
-  // #if AOC_POINT_COMPONENTS > 2
-  //     if (ydiff == 0) {
-  // #if AOC_POINT_COMPONENTS == 4
-  //       return zdiff == 0 ? wdiff : zdiff;
-  // #else
-  //       return zdiff;
-  // #endif
-  //     } else {
-  //       return ydiff;
-  //     }
-  // #else
-  //     return ydiff;
-  // #endif
-  //   } else {
-  //     return xdiff;
-  //   }
 }
 
 POINT_LINKAGE u32 POINT_IMPL(hash)(const POINT_NAME *const p) {
