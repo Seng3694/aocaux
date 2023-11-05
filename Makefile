@@ -35,7 +35,8 @@ OBJS:=$(BIN)/bits.o \
   $(BIN)/mem.o \
   $(BIN)/bump.o \
   $(BIN)/image.o \
-  $(BIN)/permutation.o
+  $(BIN)/permutation.o \
+  $(BIN)/combination.o 
 
 $(BIN)/libaocaux.a: | $(BIN) $(OBJS) 
 	$(SILENT) $(AR) $@ $(OBJS)
