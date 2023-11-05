@@ -56,12 +56,12 @@ int main(void) {
   aoc_set_string_create(&d.set, 1 << 12);
   // P(n,r) = n!/(n-r)!
   // 6!/(6-4)! = 360
-  aoc_permute(6, 4, add_to_set, &d);
+  aoc_permutations(6, 4, add_to_set, &d);
   assert(d.set.count == 360);
   clear_set(&d.set);
 
   // 6!/(6-6)! = 720
-  aoc_permute(6, 6, add_to_set, &d);
+  aoc_permutations(6, 6, add_to_set, &d);
   assert(d.set.count == 720);
 
   clear_set(&d.set);
