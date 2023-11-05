@@ -1,6 +1,8 @@
 #include <stdio.h>
+#include <string.h>
 #include <aoc/aoc.h>
 #include <aoc/permutation.h>
+#include "permutation_test_data.h"
 
 typedef struct {
   char *data;
@@ -32,14 +34,14 @@ typedef struct {
 
 static void add_to_set(const size_t *const indices, const size_t length,
                        void *userData) {
-  data *d = userData;
+  aoc_set_string *set = userData;
   string s = {.length = length};
   s.data = aoc_calloc(length + 1, 1);
   for (size_t i = 0; i < length; ++i)
-    s.data[i] = d->input[indices[i]];
+    s.data[i] = test_input[indices[i]];
   const u32 hash = aoc_string_hash1(s.data, s.length);
-  assert(!aoc_set_string_contains_pre_hashed(&d->set, s, hash));
-  aoc_set_string_insert_pre_hashed(&d->set, s, hash);
+  assert(!aoc_set_string_contains_pre_hashed(set, s, hash));
+  aoc_set_string_insert_pre_hashed(set, s, hash);
 }
 
 static void clear_set(aoc_set_string *const set) {
@@ -52,18 +54,28 @@ static void clear_set(aoc_set_string *const set) {
 }
 
 int main(void) {
-  data d = {.input = "abcdef"};
-  aoc_set_string_create(&d.set, 1 << 12);
-  // P(n,r) = n!/(n-r)!
-  // 6!/(6-4)! = 360
-  aoc_permutations(6, 4, add_to_set, &d);
-  assert(d.set.count == 360);
-  clear_set(&d.set);
+  aoc_set_string expected = {0};
+  aoc_set_string_create(&expected, 1 << 12);
+  for (size_t i = 0; i < AOC_ARRAY_SIZE(test_data); ++i) {
+    const string key = {.data = test_data[i], .length = test_output_length};
+    aoc_set_string_insert(&expected, key);
+  }
 
-  // 6!/(6-6)! = 720
-  aoc_permutations(6, 6, add_to_set, &d);
-  assert(d.set.count == 720);
+  aoc_set_string actual = {0};
+  aoc_set_string_create(&actual, 1 << 12);
+  aoc_permutations(strlen(test_input), test_output_length, add_to_set, &actual);
 
-  clear_set(&d.set);
-  aoc_set_string_destroy(&d.set);
+  // permutations are not in lexicographic order. so use sets
+  // TODO: maybe change that in the future
+  assert(actual.count == expected.count);
+  aoc_set_iter_string iter = {0};
+  aoc_set_iter_string_init(&iter, &expected);
+  string key;
+  while (aoc_set_string_iterate(&iter, &key))
+    assert(aoc_set_string_contains(&actual, key));
+
+  clear_set(&actual);
+
+  aoc_set_string_destroy(&actual);
+  aoc_set_string_destroy(&expected);
 }
