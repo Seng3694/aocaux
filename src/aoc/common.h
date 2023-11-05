@@ -38,6 +38,13 @@ typedef double f64;
 
 #define AOC_ARRAY_SIZE(arr) (sizeof(arr) / sizeof(arr[0]))
 
+#define AOC_MIN(a, b) ((a) < (b) ? (a) : (b))
+#define AOC_MAX(a, b) ((a) > (b) ? (a) : (b))
+
+#define AOC_INC_WRAP(x, min, max) (((x) + 1) > (max) ? (min) : (x) + 1)
+#define AOC_DEC_WRAP(x, min, max) (((x)-1) < (min) ? (max) : (x)-1)
+#define AOC_CLAMP(x, min, max) ((x) > (max) ? (max) : (x) < (min) ? (min) : (x))
+
 #ifndef __has_builtin
 #define __has_builtin(x) 0
 #endif
