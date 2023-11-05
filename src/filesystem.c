@@ -74,7 +74,7 @@ bool aoc_file_read_lines3(const char *path, aoc_line_func begin,
   return true;
 }
 
-bool aoc_file_read_all(const char *path, char **output, size_t *length) {
+bool aoc_file_read_all1(const char *path, char **output, size_t *length) {
   FILE *file = fopen(path, "r");
   if (!file) {
     AOC_LOG("Failed to open file '%s'\n", path);
@@ -105,4 +105,31 @@ bool aoc_file_read_all(const char *path, char **output, size_t *length) {
   *length = size;
   *output = content;
   return true;
+}
+
+char *aoc_file_read_all2(const char *path) {
+  FILE *file = fopen(path, "r");
+  if (!file) {
+    AOC_LOG("Failed to open file '%s'\n", path);
+    return NULL;
+  }
+  fseek(file, 0, SEEK_END);
+  const size_t size = ftell(file);
+  rewind(file);
+
+  char *content = NULL;
+  // reuse array if possible
+  content = aoc_alloc(size + 1);
+  if (!content) {
+    AOC_LOG("Failed to allocate %zu bytes\n", size + 1);
+    fclose(file);
+    return NULL;
+  }
+  content[size] = '\0';
+  const size_t blocksRead = fread(content, size, 1, file);
+  fclose(file);
+  if (blocksRead != 1) {
+    return NULL;
+  }
+  return content;
 }

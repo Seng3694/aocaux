@@ -13,6 +13,8 @@ bool aoc_file_read_lines2(const char *path, aoc_line_num_func func,
 bool aoc_file_read_lines3(const char *path, aoc_line_func begin,
                           aoc_line_num_func func, aoc_line_num_func end,
                           void *userData);
-bool aoc_file_read_all(const char *path, char **output, size_t *length);
+
+bool aoc_file_read_all1(const char *path, char **output, size_t *length);
+char *aoc_file_read_all2(const char *path);
 
 #endif
