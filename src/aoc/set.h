@@ -107,16 +107,16 @@ SET_LINKAGE void SET_COPY(SET_NAME *const dest, const SET_NAME *const src);
 SET_LINKAGE void SET_DUPLICATE(SET_NAME *const dest, const SET_NAME *const src);
 
 #ifndef AOC_SET_NO_IMPL
-typedef struct SET_NAME {
+struct SET_NAME {
   AOC_SIZE_T capacity;
   AOC_SIZE_T count;
   AOC_T *entries;
-} SET_NAME;
+};
 
-typedef struct SET_ITER_NAME {
+struct SET_ITER_NAME {
   const SET_NAME *set;
   AOC_SIZE_T current;
-} SET_ITER_NAME;
+};
 
 SET_LINKAGE void SET_CREATE(SET_NAME *const set, const AOC_SIZE_T capacity) {
   set->capacity = capacity;

@@ -136,15 +136,15 @@ MAP_LINKAGE void MAP_DUPLICATE(MAP_NAME *const dest, const MAP_NAME *const src);
 
 #ifndef AOC_NO_IMPL
 
-typedef struct MAP_NAME {
+struct MAP_NAME {
   SET_NAME set;
   AOC_VALUE_T *values;
-} MAP_NAME;
+};
 
-typedef struct MAP_ITER_NAME {
+struct MAP_ITER_NAME {
   const MAP_NAME *map;
   AOC_SIZE_T current;
-} MAP_ITER_NAME;
+};
 
 MAP_LINKAGE void MAP_CREATE(MAP_NAME *const map, const AOC_SIZE_T capacity) {
   SET_CREATE(&map->set, capacity);
