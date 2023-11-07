@@ -59,7 +59,7 @@ VECTOR_LINKAGE void VECTOR_REMOVE(VECTOR_NAME *const vec,
 VECTOR_LINKAGE void VECTOR_REMOVE_SWP(VECTOR_NAME *const vec,
                                       const AOC_SIZE_T index);
 VECTOR_LINKAGE void VECTOR_PUSH_MANY(VECTOR_NAME *const vec,
-                                     const AOC_T const *src,
+                                     const AOC_T *const src,
                                      const AOC_SIZE_T count);
 
 VECTOR_LINKAGE void VECTOR_CREATE(VECTOR_NAME *const vec,
@@ -139,7 +139,7 @@ VECTOR_LINKAGE void VECTOR_REMOVE_SWP(VECTOR_NAME *const vec,
 }
 
 VECTOR_LINKAGE void VECTOR_PUSH_MANY(VECTOR_NAME *const vec,
-                                     const AOC_T const *src,
+                                     const AOC_T *const src,
                                      const AOC_SIZE_T count) {
   VECTOR_ENSURE_CAPACITY(vec, vec->length + count);
   for (AOC_SIZE_T i = 0; i < count; ++i)
