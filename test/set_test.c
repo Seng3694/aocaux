@@ -1,4 +1,4 @@
-#include <aoc/aoc.h>
+#include "../src/aoc/aoc.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -7,7 +7,7 @@
 #define AOC_T_HASH(x) ((((u32)(*(x))) * 36591911) ^ 75656261)
 #define AOC_T_EQUALS(a, b) (*(a) == *(b))
 #define AOC_BASE2_CAPACITY
-#include <aoc/set.h>
+#include "../src/aoc/set.h"
 
 static inline int compare_i32(const void *const a, const void *const b) {
   return *(i32 *)a - *(i32 *)b;

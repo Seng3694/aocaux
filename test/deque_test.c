@@ -8,7 +8,7 @@ typedef struct {
 
 #define AOC_T vec2i
 #define AOC_BASE2_CAPACITY
-#include <aoc/deque.h>
+#include "../src/aoc/deque.h"
 
 int main(void) {
   aoc_deque_vec2i deque = {0};

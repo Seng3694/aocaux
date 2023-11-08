@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <string.h>
-#include <aoc/combination.h>
+#include "../src/aoc/combination.h"
 #include "combination_test_data.h"
 
 static void check(const size_t *const indices, const size_t length,

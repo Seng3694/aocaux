@@ -1,9 +1,9 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include <aoc/aoc.h>
+#include "../src/aoc/aoc.h"
 
 #define AOC_T i64
-#include <aoc/point.h>
+#include "../src/aoc/point.h"
 
 int main(void) {
   const aoc_point2_i64 a = {10, 20};

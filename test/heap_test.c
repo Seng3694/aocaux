@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <aoc/aoc.h>
+#include "../src/aoc/aoc.h"
 
 #define AOC_T i32
 #define AOC_T_COMPARE(a, b) ((*(a)) - (*(b)))
@@ -9,7 +9,7 @@
 #define AOC_T i32
 #define AOC_T_COMPARE(a, b) ((*(a)) - (*(b)))
 #define AOC_MAX_HEAP
-#include <aoc/heap.h>
+#include "../src/aoc/heap.h"
 
 int main(void) {
   const i32 items[] = {9, 3, 5, 1, 7, 0, 4, 8, 6, 2};

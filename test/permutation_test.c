@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
-#include <aoc/aoc.h>
-#include <aoc/permutation.h>
+#include "../src/aoc/aoc.h"
+#include "../src/aoc/permutation.h"
 #include "permutation_test_data.h"
 
 typedef struct {
@@ -25,7 +25,7 @@ static bool string_equals(const string *const a, const string *const b) {
 #define AOC_T_HASH(str) aoc_string_hash1((str)->data, (str)->length)
 #define AOC_T_EQUALS string_equals
 #define AOC_BASE2_CAPACITY
-#include <aoc/set.h>
+#include "../src/aoc/set.h"
 
 typedef struct {
   aoc_set_string set;

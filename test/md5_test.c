@@ -1,4 +1,4 @@
-#include <aoc/md5.h>
+#include "../src/aoc/md5.h"
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>

@@ -1,4 +1,4 @@
-#include <aoc/aoc.h>
+#include "../src/aoc/aoc.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -9,7 +9,7 @@
 #define AOC_T_HASH(x) ((((u32)(*(x))) * 36591911) ^ 75656261)
 #define AOC_T_EQUALS(a, b) (*(a) == *(b))
 #define AOC_BASE2_CAPACITY
-#include <aoc/set.h>
+#include "../src/aoc/set.h"
 
 typedef struct {
   i32 x;
@@ -23,7 +23,7 @@ typedef struct {
 #define AOC_KEY_T_EQUALS(a, b) (*(a) == *(b))
 #define AOC_BASE2_CAPACITY
 #define AOC_SET_NO_IMPL
-#include <aoc/map.h>
+#include "../src/aoc/map.h"
 
 typedef struct {
   i32 key;
