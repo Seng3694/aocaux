@@ -52,11 +52,11 @@ $(BIN):
 	$(SILENT) $(MKDIR) $(BIN) 
 
 install: $(BIN)/libaocaux.a
-	$(CP) $(BIN)/libaocaux.a /usr/local/bin/
+	$(CP) $(BIN)/libaocaux.a /usr/local/lib/
 	$(CP) $(SRC)/aoc /usr/local/include/
 
 uninstall:
-	$(RM) /usr/local/bin/libaocaux.a
+	$(RM) /usr/local/lib/libaocaux.a
 	$(RM) /usr/local/include/aoc
 
 clean:
