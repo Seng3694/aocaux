@@ -10,7 +10,7 @@
 #define AOC_HAS_FLAG(flags, flag) (((flags) & (flag)) == (flag))
 
 #if __has_builtin(__builtin_popcount)
-inline u32 aoc_popcount(const u32 i) {
+static inline u32 aoc_popcount(const u32 i) {
   return (u32)__builtin_popcount(i);
 }
 #else
