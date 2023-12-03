@@ -61,6 +61,7 @@ bool aoc_file_read_lines3(const char *path, aoc_line_func begin,
     hadContent = true;
   }
 
+  ++lineNumber;
   while (fgets(buffer, 1024, file) != NULL) {
     func(buffer, userData, lineNumber);
     lineNumber++;
